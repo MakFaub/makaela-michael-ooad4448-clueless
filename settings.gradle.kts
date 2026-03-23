@@ -1,0 +1,1 @@
+rootProject.name = "makaela-michael-OOAD-Clueless"
