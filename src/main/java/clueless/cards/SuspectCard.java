@@ -1,4 +1,4 @@
 package clueless.cards;
 
-public class weapon {
+public class SuspectCard {
 }
