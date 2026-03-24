@@ -5,7 +5,15 @@ public abstract class Artifact {
 
     Artifact(String name){ this.name = name; }
 
-    public String getName() {
+    public String getName(){
         return name;
+    }
+
+    public void collectArtifact(){
+        // remove Artifact from room, add to player inventory
+    }
+
+    public void useArtifact(){
+        // complete Concealment/Summon/Transport and remove from player inventory
     }
 }

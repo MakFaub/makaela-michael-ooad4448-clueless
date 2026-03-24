@@ -6,4 +6,10 @@ public abstract class Card {
     Card(String name){ this.name = name; }
 
     public String getname(){ return name; }
+
+    public boolean isRoomCard(){ return false; }
+
+    public boolean isSuspectCard(){ return false; }
+
+    public boolean isWeaponCard(){ return false; }
 }
