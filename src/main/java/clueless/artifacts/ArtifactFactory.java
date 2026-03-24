@@ -5,9 +5,6 @@ import java.util.Random;
 public class ArtifactFactory {
     private static final Random random = new Random();
 
-    private static final double MINIMUM_FOOD_VALUE = 1.0;
-    private static final double MAXIMUM_FOOD_VALUE = 2.0;
-
     private static final String[] SUMMON_ARTIFACT_NAMES = new String[]{
             "Summoning Wand"};
 

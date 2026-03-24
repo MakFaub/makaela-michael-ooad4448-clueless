@@ -1,4 +1,5 @@
 package clueless.cards;
 
-public class RoomCard {
+public class RoomCard extends Card {
+    RoomCard(String name){ super(name);}
 }
