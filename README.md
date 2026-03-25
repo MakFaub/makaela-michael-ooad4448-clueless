@@ -38,14 +38,14 @@ Due to project scope and time constraints, this implementation includes a modifi
 
 ## Core Classes
 
-| Category   | Classes                                                 |
-|------------|---------------------------------------------------------|
-| Game Play  | `GameObserver`, `GameAdapter`                           |
-| Game Board | `Board`, `Space`, `Room`, `Hallway`                     |
-| Cards      | `Card`, `Deck`, `RoomCard`, `SuspectCard`, `WeaponCard` |
-| Pieces     | `Piece`, `SuspectPiece`, `WeaponPiece`                  |
-| Player     | `Player`, `Hand`                                        |
-| Artifacts  | `Artifact`, `ArtifactFactory`                           |
+| Category   | Classes                                                                |
+|------------|------------------------------------------------------------------------|
+| Game Play  | `GameObserver`, `GameAdapter`                                          |
+| Game Board | `Board`, `Space`, `Room`, `Hallway`                                    |
+| Cards      | `Card`, `Deck`, `RoomCard`, `SuspectCard`, `WeaponCard`, `CardFactory` |
+| Pieces     | `Piece`, `SuspectPiece`, `WeaponPiece`, `PieceFactory`                  |
+| Player     | `Player`, `Hand`                                                       |
+| Artifacts  | `Artifact`, `ArtifactFactory`                                          |
 
 ---
 
@@ -54,8 +54,6 @@ Due to project scope and time constraints, this implementation includes a modifi
 | Interface | Purpose |
 |----------|--------|
 | `Die` | Dice rolling abstraction |
-| `CardFactory` | Creates cards |
-| `PieceFactory` | Creates suspects & weapons |
 | `GameObserver` | Observes game events |
 
 ---
