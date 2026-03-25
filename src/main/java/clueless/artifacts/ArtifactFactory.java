@@ -19,7 +19,7 @@ public class ArtifactFactory {
     }
 
     public Artifact createSummonArtifact() {
-        return createSummonArtifact(getRandomTransportArtifactName());
+        return createSummonArtifact(getRandomSummonArtifactName());
     }
 
     private static String getRandomSummonArtifactName() {
