@@ -40,7 +40,7 @@ class ArtifactFactoryTest {
     }
 
     @Test
-    void createSummonArtifact() {
+    void testCreateSummonArtifact() {
         Artifact artifact = factory.createSummonArtifact();
 
         assertNotNull(artifact);
