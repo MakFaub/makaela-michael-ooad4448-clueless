@@ -20,12 +20,4 @@ public class Hallway extends Space {
             return true;
         }
     }
-
-    @Override
-    public  boolean leave(Player player) {
-        if(isOccupied()){ return false; }
-        else{ return super.leave(player); }
-    }
-
-
 }

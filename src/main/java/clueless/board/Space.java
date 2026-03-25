@@ -31,7 +31,7 @@ public abstract class Space {
     public void addNeighbor(NeighborDirection direction, Space neighbor){
         if(neighbor != null){
             neighbors.put(direction, neighbor);
-            neighbor.neighbors.put(direction.opposite(), neighbor);
+            neighbor.neighbors.put(direction.opposite(), this);
         }
     }
 
