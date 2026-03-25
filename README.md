@@ -40,9 +40,10 @@ Due to project scope and time constraints, this implementation includes a modifi
 
 | Category   | Classes                                                 |
 |------------|---------------------------------------------------------|
+| Game Play  | `GameObserver`, `GameAdapter`                           |
 | Game Board | `Board`, `Space`, `Room`, `Hallway`                     |
 | Cards      | `Card`, `Deck`, `RoomCard`, `SuspectCard`, `WeaponCard` |
-| Pieces     | `Piece`, ``                                             |
+| Pieces     | `Piece`, `SuspectPiece`, `WeaponPiece`                  |
 | Player     | `Player`, `Hand`                                        |
 | Artifacts  | `Artifact`, `ArtifactFactory`                           |
 
@@ -62,20 +63,24 @@ Due to project scope and time constraints, this implementation includes a modifi
 ## Design Patterns
 
 ### Factory Pattern
-**Used In:**  ``
--
+**Used In:**  `ArtifactFactory`, `CardFactory`, `PieceFactory`
+
+- The Factory design pattern will be used to create new instances of game objects like Artifacts, Cards, and Pieces.
 
 ---
 
 ### Builder Pattern
-**Used In:** ``
-- 
+**Used In:** `GameAdapter`
+
+- The Builder pattern will be used in the GameAdapter class in order to configure the game setup.
+- It will setup the board, players, decks, and starting rooms for all game pieces.
 
 ---
 
 ### Observer Pattern
-**Used In:** ``
-- 
+**Used In:** `GameObserver`
 
+- The Observer design pattern will be used in GameObserver to decouple UI and logging from state changes.
+- GameObserver will keep track of game events, such as turns, suggestions/guesses, accusations, and card reveals via the concealment artifacts.
 ---
 
