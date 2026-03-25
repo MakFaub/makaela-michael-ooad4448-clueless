@@ -20,8 +20,7 @@
 
 ## Overview
 
-**Clueless** is a fully object-oriented implementation of the classic board game *Clue*.  
-The project emphasizes clean architecture, extensibility, and core software engineering principles.
+**Clueless** is a fully object-oriented implementation of the classic board game *Clue*.
 
 Players navigate a mansion, gather clues, and must deduce:
 
@@ -32,7 +31,7 @@ Players navigate a mansion, gather clues, and must deduce:
   Official Rules:  
   https://www.hasbro.com/common/instruct/clueins.pdf
 
-Due to project scope and time constraints, this implementation includes a modified rule set and a custom-designed map.
+Due to project scope and time constraints, this implementation includes a modified rule set and a custom map.
 
 ### TBD
  
