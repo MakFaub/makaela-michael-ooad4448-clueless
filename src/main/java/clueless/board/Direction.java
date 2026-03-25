@@ -1,10 +1,10 @@
 package clueless.board;
 
-public enum NeighborDirection {
+public enum Direction {
     NORTH, SOUTH, EAST, WEST, SECRET;
 
     //for neighbor bidirectionality
-    public NeighborDirection opposite() {
+    public Direction opposite() {
         return switch (this) {
             case NORTH -> SOUTH;
             case SOUTH -> NORTH;

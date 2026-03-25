@@ -20,4 +20,12 @@ public class Hallway extends Space {
             return true;
         }
     }
+
+    @Override
+    public void connect(Direction direction, Space neighbor){
+        if(direction == Direction.SECRET){
+            throw new IllegalArgumentException("Hallways cannot use Direction SECRET.");
+        }
+        super.connect(direction, neighbor);
+    }
 }
