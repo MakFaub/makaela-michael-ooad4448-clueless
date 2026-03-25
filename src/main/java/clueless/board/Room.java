@@ -22,8 +22,6 @@ public class Room extends Space{
         this.addNeighbor(NeighborDirection.SECRET, secretNeighbor);
     }
 
-
-
     public boolean isUnoccupied(Space space){ return space instanceof Hallway hallway && !hallway.isOccupied(); }
 
     public List<Space> getUnoccupiedExits() {
