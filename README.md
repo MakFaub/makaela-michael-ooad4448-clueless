@@ -40,9 +40,10 @@ Due to project scope and time constraints, this implementation includes a modifi
 
 | Category   | Classes                                                 |
 |------------|---------------------------------------------------------|
-| Game Board | `Map`, `Hallway`, `Room`                                |
+| Game Board | `Board`, `Space`, `Room`, `Hallway`                     |
 | Cards      | `Card`, `Deck`, `RoomCard`, `SuspectCard`, `WeaponCard` |
 | Pieces     | `Piece`, ``                                             |
+| Player     | `Player`, `Hand`                                        |
 | Artifacts  | `Artifact`, `ArtifactFactory`                           |
 
 ---
