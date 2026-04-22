@@ -1,6 +1,5 @@
 package clueless.cards;
 
-import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -10,6 +9,7 @@ class CardFactoryTest {
     private final CardFactory factory = new CardFactory();
 
     @Test
+
     void testCreateRoomCard() {
         Card card = factory.createRoomCard();
 

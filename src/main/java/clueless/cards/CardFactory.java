@@ -5,17 +5,17 @@ import java.util.Random;
 public class CardFactory {
     private static final Random random = new Random();
 
-    private static final String[] ROOM_NAMES = new String[]{
+    static final String[] ROOM_NAMES = new String[]{
             "Billiard Room", "Ballroom", "Kitchen", "Conservatory",
             "Dining Room", "Hall", "Library", "Lounge", "Study"
     };
 
-    private static final String[] SUSPECT_NAMES = new String[]{
+    static final String[] SUSPECT_NAMES = new String[]{
             "Miss Scarlet", "Colonel Mustard", "Dr. Orchard", "Mr. Green",
             "Mrs. Peacock", "Professor Plum"
     };
 
-    private static final String[] WEAPON_NAMES = new String[]{
+    static final String[] WEAPON_NAMES = new String[]{
             "Candlestick", "Rope", "Dagger", "Lead Pipe", "Revolver", "Wrench"};
 
     public Card createRoomCard(String name) {
