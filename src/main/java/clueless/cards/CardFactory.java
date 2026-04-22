@@ -5,6 +5,10 @@ import java.util.Random;
 public class CardFactory {
     private static final Random random = new Random();
 
+    int NUM_ROOMS = 9;
+    int NUM_SUSPECTS = 6;
+    int NUM_WEAPONS = 6;
+
     static final String[] ROOM_NAMES = new String[]{
             "Billiard Room", "Ballroom", "Kitchen", "Conservatory",
             "Dining Room", "Hall", "Library", "Lounge", "Study"

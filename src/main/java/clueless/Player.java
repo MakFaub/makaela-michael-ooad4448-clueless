@@ -9,7 +9,7 @@ public class Player {
     private final List<Card> hand = new ArrayList<>();
     private final List<Card> discoveredCards = new ArrayList<>();
 
-    Player(String name){ this.name = name; }
+    public Player(String name){ this.name = name; }
 
     public String getName(){ return name; }
 
@@ -19,8 +19,8 @@ public class Player {
 
     public List<Card> getHand() { return hand; }
 
-    public void addCardToHand(Card card) {
-        hand.add(card);
-        discoveredCards.add(card);
+    public void addCardsToHand(List<Card> cards) {
+        hand.addAll(cards);
+        discoveredCards.addAll(cards);
     }
 }

@@ -8,34 +8,43 @@ import clueless.Player;
 
 public class Deck {
 
-    private final List<RoomCard> roomDeck = new ArrayList<>();
-    private final List<SuspectCard> suspectDeck = new ArrayList<>();
-    private final List<WeaponCard> weaponDeck = new ArrayList<>();
+    private final List<Card> roomDeck = new ArrayList<>();
+    private final List<Card> suspectDeck = new ArrayList<>();
+    private final List<Card> weaponDeck = new ArrayList<>();
 
     private final List<Card> envelopeCards = new ArrayList<>(); // secret cards players are trying to guess
 
-    public static Deck buildStandardDeck(CardFactory cardFactory) {
-        Deck deck = new Deck();
-
+    public Deck(CardFactory cardFactory) {
         for (String name : CardFactory.SUSPECT_NAMES) {
-            deck.suspectDeck.add((SuspectCard) cardFactory.createSuspectCard(name));
+            suspectDeck.add((SuspectCard) cardFactory.createSuspectCard(name));
         }
 
         for (String name : CardFactory.WEAPON_NAMES) {
-            deck.weaponDeck.add((WeaponCard) cardFactory.createWeaponCard(name));
+            weaponDeck.add((WeaponCard) cardFactory.createWeaponCard(name));
         }
 
         for (String name : CardFactory.ROOM_NAMES) {
-            deck.roomDeck.add((RoomCard) cardFactory.createRoomCard(name));
+            roomDeck.add((RoomCard) cardFactory.createRoomCard(name));
         }
-
-        return deck;
     }
 
     private void shuffle() {
         Collections.shuffle(roomDeck);
         Collections.shuffle(suspectDeck);
         Collections.shuffle(weaponDeck);
+    }
+
+    private List<Card> dealOneOfEachCardType() {
+        List<Card> oneOfEach = new ArrayList<>();
+        oneOfEach.add(roomDeck.getFirst());
+        oneOfEach.add(suspectDeck.getFirst());
+        oneOfEach.add(weaponDeck.getFirst());
+
+        roomDeck.removeFirst();
+        suspectDeck.removeFirst();
+        weaponDeck.removeFirst();
+
+        return oneOfEach;
     }
 
     public void deal(List<Player> players) {
@@ -45,9 +54,22 @@ public class Deck {
 
         this.shuffle();
 
-        // TODO: still working on this
+        envelopeCards.addAll(dealOneOfEachCardType());
 
+        for (Player player : players) {
+            player.addCardsToHand(dealOneOfEachCardType());
+        }
     }
 
+    public boolean checkGuessAgainstEnvelopeCards(List<Card> cards) {
+        return cards.equals(envelopeCards);
+    }
 
+    public int getNumCardsInRoomDeck() { return roomDeck.size(); }
+
+    public int getNumCardsInSuspectDeck() { return suspectDeck.size(); }
+
+    public int getNumCardsInWeaponDeck() { return weaponDeck.size(); }
+
+    public List<Card> getEnvelopeCards() { return envelopeCards; }
 }
