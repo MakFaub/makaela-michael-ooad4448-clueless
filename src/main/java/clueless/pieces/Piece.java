@@ -16,4 +16,6 @@ public abstract class Piece implements IPiece {
     public boolean isType(PieceType type) {
         return this.pieceType == type;
     }
+
+    public abstract PieceType getType();
 }

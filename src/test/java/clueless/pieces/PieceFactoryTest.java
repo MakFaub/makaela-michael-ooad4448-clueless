@@ -13,7 +13,7 @@ class PieceFactoryTest {
     void testCreateSuspectPieceWithName() {
         Piece piece = pieceFactory.createSuspectPiece("Miss Scarlet");
         assertEquals("Miss Scarlet", piece.getName());
-        assertTrue(piece.isType(PieceType.Suspect));
+        assertEquals(PieceType.Suspect, piece.getType());
     }
 
     @Test
@@ -28,7 +28,7 @@ class PieceFactoryTest {
     void testCreateWeaponPieceWithName() {
         Piece piece = pieceFactory.createWeaponPiece("Dagger");
         assertEquals("Dagger", piece.getName());
-        assertTrue(piece.isType(PieceType.Weapon));
+        assertEquals(PieceType.Weapon, piece.getType());
     }
 
     @Test
@@ -43,7 +43,7 @@ class PieceFactoryTest {
     void testCreateSummonArtifactWithName() {
         Piece piece = pieceFactory.createSummonArtifact("Summoning Wand");
         assertEquals("Summoning Wand", piece.getName());
-        assertTrue(piece.isType(PieceType.Summon));
+        assertEquals(PieceType.Summon, piece.getType());
     }
 
     @Test
@@ -58,7 +58,7 @@ class PieceFactoryTest {
     void testCreateConcealmentArtifactWithName() {
         Piece piece = pieceFactory.createConcealmentArtifact("Cloak of Invisibility");
         assertEquals("Cloak of Invisibility", piece.getName());
-        assertTrue(piece.isType(PieceType.Concealment));
+       assertEquals(PieceType.Concealment, piece.getType());
     }
 
     @Test
@@ -73,7 +73,7 @@ class PieceFactoryTest {
     void testCreateTransportArtifactWithName() {
         Piece piece = pieceFactory.createTransportArtifact("Seven League Boots");
         assertEquals("Seven League Boots", piece.getName());
-        assertTrue(piece.isType(PieceType.Transport));
+        assertEquals(PieceType.Transport, piece.getType());
     }
 
     @Test
