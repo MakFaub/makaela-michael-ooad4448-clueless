@@ -1,11 +1,14 @@
 package clueless;
 
+import clueless.board.Space;
 import clueless.cards.Card;
 import clueless.cards.WeaponCard;
 import clueless.pieces.ArtifactPiece;
 import clueless.pieces.ConcealmentArtifact;
 import clueless.pieces.SummonArtifact;
 import clueless.pieces.TransportArtifact;
+
+import clueless.pieces.Piece;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -14,6 +17,25 @@ import java.util.Set;
 
 public class Player {
     private final String name;
+    private final List<Card> hand = new ArrayList<>();
+    private Piece suspectPiece;
+    private Space currentSpace;
+
+    public void setPiece(Piece piece) {
+        this.suspectPiece = piece;
+    }
+
+    public Piece getPiece() {
+        return this.suspectPiece;
+    }
+
+    public Space getCurrentSpace() {
+        return this.currentSpace;
+    }
+
+
+
+    private final List<Card> discoveredCards = new ArrayList<>();
     private final Set<Card> hand = new HashSet<>();
     private final Set<Card> discoveredCards = new HashSet<>();
     private Set<ArtifactPiece> artifacts = new HashSet<>();
