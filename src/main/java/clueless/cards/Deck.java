@@ -11,58 +11,41 @@ public class Deck {
     private final List<Card> roomDeck = new ArrayList<>();
     private final List<Card> suspectDeck = new ArrayList<>();
     private final List<Card> weaponDeck = new ArrayList<>();
-
-    private final List<Card> envelopeCards = new ArrayList<>(); // secret cards players are trying to guess
+    private boolean envelopeFilled = false;
 
     public Deck(CardFactory cardFactory) {
-        for (String name : CardFactory.SUSPECT_NAMES) {
-            suspectDeck.add((SuspectCard) cardFactory.createSuspectCard(name));
-        }
+        for (String name : CardFactory.SUSPECT_NAMES) suspectDeck.add(cardFactory.createSuspectCard(name));
 
-        for (String name : CardFactory.WEAPON_NAMES) {
-            weaponDeck.add((WeaponCard) cardFactory.createWeaponCard(name));
-        }
+        for (String name : CardFactory.WEAPON_NAMES) weaponDeck.add(cardFactory.createWeaponCard(name));
 
-        for (String name : CardFactory.ROOM_NAMES) {
-            roomDeck.add((RoomCard) cardFactory.createRoomCard(name));
-        }
+        for (String name : CardFactory.ROOM_NAMES) roomDeck.add(cardFactory.createRoomCard(name));
     }
 
-    void shuffle() {
+    public void shuffle() {
         Collections.shuffle(roomDeck);
         Collections.shuffle(suspectDeck);
         Collections.shuffle(weaponDeck);
     }
 
-    private List<Card> dealOneOfEachCardType() {
-        List<Card> oneOfEach = new ArrayList<>();
-        oneOfEach.add(roomDeck.getFirst());
-        oneOfEach.add(suspectDeck.getFirst());
-        oneOfEach.add(weaponDeck.getFirst());
+    public Envelope fillEnvelope() {
+        if (envelopeFilled) throw new IllegalStateException("Envelope already filled.");
+        if (roomDeck.isEmpty() || suspectDeck.isEmpty() || weaponDeck.isEmpty()) throw new IllegalStateException("decks are empty");
 
-        roomDeck.removeFirst();
-        suspectDeck.removeFirst();
-        weaponDeck.removeFirst();
-
-        return oneOfEach;
+        envelopeFilled = true;
+        return new Envelope(roomDeck.removeFirst(), suspectDeck.removeFirst(), weaponDeck.removeFirst());
     }
 
     public void deal(List<Player> players) {
-        if (players == null || players.isEmpty()) {
-            throw new IllegalArgumentException("Cannot deal to an empty player list.");
+        if(players.isEmpty()) throw new IllegalArgumentException("Cannot deal to an empty player list.");
+
+        List<Card> remainingCards = new ArrayList<>();
+        remainingCards.addAll(roomDeck);
+        remainingCards.addAll(suspectDeck);
+        remainingCards.addAll(weaponDeck);
+
+        for (int i = 0; i < remainingCards.size(); i++) {
+            players.get(i % players.size()).addCardsToHand(List.of(remainingCards.get(i)));
         }
-
-        this.shuffle();
-
-        envelopeCards.addAll(dealOneOfEachCardType());
-
-        for (Player player : players) {
-            player.addCardsToHand(dealOneOfEachCardType());
-        }
-    }
-
-    public boolean checkGuessAgainstEnvelopeCards(List<Card> cards) {
-        return cards.equals(envelopeCards);
     }
 
     public int getNumCardsInRoomDeck() { return roomDeck.size(); }
@@ -70,8 +53,6 @@ public class Deck {
     public int getNumCardsInSuspectDeck() { return suspectDeck.size(); }
 
     public int getNumCardsInWeaponDeck() { return weaponDeck.size(); }
-
-    public List<Card> getEnvelopeCards() { return envelopeCards; }
 
     public List<Card> getSuspectDeck() { return suspectDeck; }
 

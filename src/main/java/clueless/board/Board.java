@@ -60,7 +60,7 @@ public class Board {
             return this;
         }
 
-        /* public Builder createDefaultClueBoard() {
+        public Builder createDefaultClueBoard() {
             Room kitchen = new Room("Kitchen");
             Room ballroom = new Room("Ballroom");
             Room conservatory = new Room("Conservatory");
@@ -74,7 +74,7 @@ public class Board {
             addSpace(kitchen, ballroom, conservatory, billiard,  library, study, hall, lounge, dining);
 
             return this;
-        } */
+        }
 
         private void addSpace(Space... newSpaces) {
             addSpaces(List.of(newSpaces));
