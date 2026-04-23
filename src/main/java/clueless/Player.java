@@ -2,10 +2,7 @@ package clueless;
 
 import clueless.cards.Card;
 import clueless.cards.WeaponCard;
-import clueless.pieces.ArtifactPiece;
-import clueless.pieces.ConcealmentArtifact;
-import clueless.pieces.SummonArtifact;
-import clueless.pieces.TransportArtifact;
+import clueless.pieces.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -16,9 +13,15 @@ public class Player {
     private final String name;
     private final Set<Card> hand = new HashSet<>();
     private final Set<Card> discoveredCards = new HashSet<>();
-    private Set<ArtifactPiece> artifacts = new HashSet<>();
+    private Set<IPiece> piecesInHand = new HashSet<>();
+    private SuspectPiece playerPiece;
 
+    // TODO: change constructor to assign playerPiece and remove assignPlayerPiece
     public Player(String name){ this.name = name; }
+
+    public void assignPlayerPiece(SuspectPiece piece){ this.playerPiece = piece; }
+
+    public SuspectPiece getPlayerPiece() { return playerPiece; }
 
     public String getName(){ return name; }
 
@@ -33,19 +36,29 @@ public class Player {
         discoveredCards.addAll(cards);
     }
 
-    public Set<ArtifactPiece> getArtifacts() { return artifacts; }
+    public void takePiece(IPiece piece) { piecesInHand.add(piece); }
+
+    public Set<IPiece> getPiecesInHand() { return piecesInHand; }
+
+    public boolean hasPieceOfType(PieceType type) { return piecesInHand.stream().anyMatch(piece -> piece.getType() == type); }
+
+    public boolean hasArtifact() {
+        return piecesInHand.stream().anyMatch(piece -> piece.getType().isArtifact());
+    }
 
     public boolean hasTransportArtifact() {
-        return artifacts.stream().anyMatch(artifact -> artifact instanceof TransportArtifact);
+        return hasPieceOfType(PieceType.Transport);
     }
 
     public boolean hasConcealmentArtifact() {
-        return artifacts.stream().anyMatch(artifact -> artifact instanceof ConcealmentArtifact);
+        return hasPieceOfType(PieceType.Concealment);
     }
 
     public boolean hasSummonArtifact() {
-        return artifacts.stream().anyMatch(artifact -> artifact instanceof SummonArtifact);
+        return hasPieceOfType(PieceType.Summon);
     }
 
-    public void useArtifact(ArtifactPiece artifact) { artifacts.remove(artifact); }
+    public boolean hasWeaponPiece() {
+        return hasPieceOfType(PieceType.Weapon);
+    }
 }

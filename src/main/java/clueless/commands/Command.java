@@ -5,12 +5,12 @@ import clueless.board.Space;
 
 public abstract class Command implements ICommand {
     protected CommandType type;
-    protected final Player myself;
+    protected final Player player;
     protected final Space space;
 
-    public Command(CommandType type, Player myself, Space space) {
+    public Command(CommandType type, Player player, Space space) {
         this.type = type;
-        this.myself = myself;
+        this.player = player;
         this.space = space;
     }
 

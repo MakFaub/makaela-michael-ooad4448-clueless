@@ -6,13 +6,14 @@ import clueless.pieces.PieceType;
 import clueless.pieces.SuspectPiece;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public abstract class Space {
     private final String name;
     private final Map<Direction, Space> neighbors = new EnumMap<Direction, Space>(Direction.class);
     private boolean startingSpace;
 
-    private final List<Piece> pieces = new ArrayList<Piece>();
+    private final Set<IPiece> pieces = new HashSet<>();
 
     public Space(String name){
         this.name = name;
@@ -46,12 +47,12 @@ public abstract class Space {
         return Map.copyOf(neighbors);
     }
 
-    public List<Piece> getPieces(){
-        return List.copyOf(pieces);
+    public Set<IPiece> getPieces(){
+        return Set.copyOf(pieces);
     }
 
-    public List<Piece> getSuspectPieces() {
-        return pieces.stream().filter(piece -> piece.getType() == PieceType.Suspect).toList();
+    public Set<IPiece> getSuspectPieces() {
+        return pieces.stream().filter(piece -> piece.getType() == PieceType.Suspect).collect(Collectors.toSet());
     }
 
     public boolean isAvailable(){
@@ -62,20 +63,12 @@ public abstract class Space {
         return pieces.stream().anyMatch(piece -> piece.isType(PieceType.Suspect));
     }
 
-    public boolean enter(Piece piece){
-        return addPiece(piece);
-    }
-
-    public void leave(Piece piece){
-        removePiece(piece);
-    }
-
-    public boolean addPiece(Piece piece) {
+    public boolean addPiece(IPiece piece) {
         pieces.add(piece);
         return true;
     }
 
-    public void removePiece(Piece piece) {
+    public void removePiece(IPiece piece) {
         pieces.remove(piece);
     }
 
@@ -87,15 +80,17 @@ public abstract class Space {
 
     public boolean isHallway() { return false; }
 
-    public List<Piece> getWeaponPieces() {
-        return pieces.stream().filter(piece -> piece.getType() == PieceType.Weapon).toList();
+    public Set<IPiece> getWeaponPieces() {
+        return pieces.stream().filter(piece -> piece.getType() == PieceType.Weapon).collect(Collectors.toSet());
     }
 
-    public List<Piece> getArtifactPieces() {
-        return pieces.stream().filter(piece -> piece.getType().isArtifact()).toList();
+    public Set<IPiece> getArtifactPieces() {
+        return pieces.stream().filter(piece -> piece.getType().isArtifact()).collect(Collectors.toSet());
     }
 
     public boolean hasNeighbors() {
         return !neighbors.isEmpty();
     }
+
+    public boolean contains(IPiece piece) { return pieces.contains(piece); }
 }

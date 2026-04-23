@@ -5,7 +5,7 @@ import clueless.board.Space;
 
 public class GuessCommand extends Command {
 
-    public GuessCommand(Player myself, Space space){ super(CommandType.GUESS, myself, space); }
+    public GuessCommand(Player player, Space space){ super(CommandType.GUESS, player, space); }
 
     @Override
     public boolean execute() {
