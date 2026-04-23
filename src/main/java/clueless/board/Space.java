@@ -1,6 +1,8 @@
 package clueless.board;
 
-import clueless.Player;
+import clueless.pieces.Piece;
+import clueless.pieces.PieceType;
+import clueless.pieces.SuspectPiece;
 
 import java.util.*;
 
@@ -8,7 +10,8 @@ public abstract class Space {
     private final String name;
     private final Map<Direction, Space> neighbors = new EnumMap<Direction, Space>(Direction.class);
     private boolean startingSpace;
-    private final List<Player> players = new ArrayList<Player>();
+
+    private final List<Piece> pieces = new ArrayList<Piece>();
 
     public Space(String name){
         this.name = name;
@@ -42,27 +45,37 @@ public abstract class Space {
         return Map.copyOf(neighbors);
     }
 
-    public List<Player> getPlayers(){
-        return List.copyOf(players);
+    public List<Piece> getPieces(){
+        return List.copyOf(pieces);
     }
+
+    public List<Piece> getSuspectPieces() {
+        return pieces.stream().filter(piece -> piece.getType() == PieceType.Suspect).toList();
+    }
+
     public boolean isAvailable(){
         return !isOccupied();
     }
 
     public boolean isOccupied(){
-        return !players.isEmpty();
+        return pieces.stream().anyMatch(piece -> piece.isType(PieceType.Suspect));
     }
 
+    public boolean enter(Piece piece){
+        return addPiece(piece);
+    }
 
+    public void leave(Piece piece){
+        removePiece(piece);
+    }
 
-    public boolean enter(Player player){
-        players.add(player);
+    public boolean addPiece(Piece piece) {
+        pieces.add(piece);
         return true;
     }
 
-    public boolean leave(Player player){
-        players.remove(player);
-        return true;
+    public void removePiece(Piece piece) {
+        pieces.remove(piece);
     }
 
     public String getName(){

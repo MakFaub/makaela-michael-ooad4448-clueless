@@ -1,6 +1,6 @@
 package clueless.board;
 
-import clueless.Player;
+import clueless.pieces.Piece;
 
 public class Hallway extends Space {
     public Hallway(String name) {
@@ -9,14 +9,14 @@ public class Hallway extends Space {
 
     @Override
     public boolean isOccupied() {
-        return !getPlayers().isEmpty();
+        return !getSuspectPieces().isEmpty();
     }
 
     @Override
-    public boolean enter(Player player) {
+    public boolean enter(Piece piece) {
         if(isOccupied()){ return false; }
         else{
-            super.enter(player);
+            super.enter(piece);
             return true;
         }
     }

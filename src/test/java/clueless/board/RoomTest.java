@@ -1,12 +1,15 @@
 package clueless.board;
 
-import clueless.Player;
+import clueless.pieces.Piece;
+import clueless.pieces.PieceFactory;
 import org.junit.jupiter.api.Test;
 
 import static clueless.board.Direction.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class RoomTest {
+    private final PieceFactory factory = new PieceFactory();
+
     @Test
     void testGetName() {
         Room room = new Room("Kitchen");
@@ -39,14 +42,13 @@ public class RoomTest {
     }
 
     @Test
-    void testGetSecretPassageWhenNone() {
+    void testNoSecretPassage() {
         Room room = new Room("Kitchen");
         assertNull(room.getSecretPassage());
     }
 
     @Test
     void testGetAvailableExits() {
-
         // exit exists
         Room room = new Room("Kitchen");
         Hallway hallway = new Hallway("Hallway AB");
@@ -55,7 +57,7 @@ public class RoomTest {
         assertTrue(room.getAvailableExits().contains(hallway));
 
         // exit is blocked by another player
-        hallway.enter(new Player("Scarlett"));
+        hallway.enter(factory.createSuspectPiece("Scarlett"));
         assertEquals(0, room.getAvailableExits().size());
         assertFalse(room.getAvailableExits().contains(hallway));
     }
@@ -63,33 +65,33 @@ public class RoomTest {
     @Test
     void testEnter() {
         Room room = new Room("Kitchen");
-        Player player = new Player("Scarlett");
+        Piece player = factory.createSuspectPiece("Scarlett");
         room.enter(player);
-        assertTrue(room.getPlayers().contains(player));
+        assertTrue(room.getSuspectPieces().contains(player));
     }
 
     @Test
     void testRoomAllowsMultiplePlayers() {
         Room room = new Room("Kitchen");
-        room.enter(new Player("Scarlett"));
-        room.enter(new Player("Mustard"));
-        assertEquals(2, room.getPlayers().size());
+        room.enter(factory.createSuspectPiece("Scarlett"));
+        room.enter(factory.createSuspectPiece("Mustard"));
+        assertEquals(2, room.getSuspectPieces().size());
     }
 
     @Test
     void testLeave() {
         Room room = new Room("Kitchen");
-        Player player = new Player("Scarlett");
+        Piece player = factory.createSuspectPiece("Scarlett");
         room.enter(player);
         room.leave(player);
-        assertFalse(room.getPlayers().contains(player));
+        assertFalse(room.getSuspectPieces().contains(player));
     }
 
     @Test
     void testIsOccupied() {
         Room room = new Room("Kitchen");
         assertFalse(room.isOccupied());
-        room.enter(new Player("Scarlett"));
+        room.enter(factory.createSuspectPiece("Scarlett"));
         assertTrue(room.isOccupied());
     }
 
@@ -106,4 +108,32 @@ public class RoomTest {
         room.setStartingSpace(true);
         assertTrue(room.isStartingSpace());
     }
+
+    @Test
+    void testGetPieces() {
+        Room room = new Room("Kitchen");
+        Piece scarlet = factory.createSuspectPiece("Scarlet");
+        Piece candleStick = factory.createWeaponPiece("CandleStick");
+        room.enter(scarlet);
+        room.enter(candleStick);
+        assertEquals(2, room.getPieces().size());
+
+        assertTrue(room.getPieces().contains(scarlet));
+        assertTrue(room.getPieces().contains(candleStick));
+    }
+
+    @Test
+    void testGetSuspectPieces() {
+        Room room = new Room("Kitchen");
+        Piece scarlet = factory.createSuspectPiece("Scarlet");
+        Piece candleStick = factory.createWeaponPiece("CandleStick");
+        room.enter(scarlet);
+        room.enter(candleStick);
+        assertEquals(1, room.getSuspectPieces().size());
+
+        assertTrue(room.getPieces().contains(scarlet));
+        assertTrue(room.getPieces().contains(candleStick));
+    }
+
+
 }

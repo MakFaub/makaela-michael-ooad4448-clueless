@@ -1,12 +1,17 @@
 package clueless.board;
 
-import clueless.Player;
 import org.junit.jupiter.api.Test;
 
 import static clueless.board.Direction.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import clueless.pieces.Piece;
+import clueless.pieces.PieceFactory;
+import clueless.pieces.SuspectPiece;
+
 public class HallwayTest {
+    private final PieceFactory factory = new PieceFactory();
+    
     @Test
     void testGetName() {
         Hallway hallway = new Hallway("Hallway AB");
@@ -39,34 +44,34 @@ public class HallwayTest {
     @Test
     void testEnter() {
         Hallway hallway = new Hallway("Hallway AB");
-        Player player = new Player("Scarlett");
+        Piece player = factory.createSuspectPiece("Scarlett");
         assertTrue(hallway.enter(player));
-        assertTrue(hallway.getPlayers().contains(player));
+        assertTrue(hallway.getSuspectPieces().contains(player));
     }
 
     @Test
     void testEnterWhenOccupied() {
         Hallway hallway = new Hallway("Hallway AB");
-        Player mustard = new Player("Mustard");
-        hallway.enter(new Player("Scarlett"));
+        Piece mustard = factory.createSuspectPiece("Mustard");
+        hallway.enter(factory.createSuspectPiece("Scarlett"));
         assertFalse(hallway.enter(mustard));
-        assertFalse(hallway.getPlayers().contains(mustard));
+        assertFalse(hallway.getSuspectPieces().contains(mustard));
     }
 
     @Test
     void testLeave() {
         Hallway hallway = new Hallway("Hallway AB");
-        Player player = new Player("Scarlett");
+        Piece player = factory.createSuspectPiece("Scarlett");
         hallway.enter(player);
         hallway.leave(player);
-        assertFalse(hallway.getPlayers().contains(player));
+        assertFalse(hallway.getSuspectPieces().contains(player));
     }
 
     @Test
     void testIsOccupied() {
         Hallway hallway = new Hallway("Hallway AB");
         assertFalse(hallway.isOccupied());
-        hallway.enter(new Player("Scarlett"));
+        hallway.enter(factory.createSuspectPiece("Scarlett"));
         assertTrue(hallway.isOccupied());
     }
 
@@ -74,7 +79,7 @@ public class HallwayTest {
     void testIsAvailable() {
         Hallway hallway = new Hallway("Hallway AB");
         assertTrue(hallway.isAvailable());
-        hallway.enter(new Player("Scarlett"));
+        hallway.enter(factory.createSuspectPiece("Scarlett"));
         assertFalse(hallway.isAvailable());
     }
 

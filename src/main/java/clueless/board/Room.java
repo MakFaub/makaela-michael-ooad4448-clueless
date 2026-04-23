@@ -28,7 +28,6 @@ public class Room extends Space{
             super.connect(direction, neighbor);
         } else {
             if(neighbor instanceof Room){ addSecretPassage((Room) neighbor); }
-            else { throw new IllegalArgumentException("cannot use direction SECRET with hallways"); }
         }
 
     }
