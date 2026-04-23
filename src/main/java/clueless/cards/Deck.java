@@ -28,7 +28,7 @@ public class Deck {
         }
     }
 
-    private void shuffle() {
+    void shuffle() {
         Collections.shuffle(roomDeck);
         Collections.shuffle(suspectDeck);
         Collections.shuffle(weaponDeck);
@@ -72,4 +72,10 @@ public class Deck {
     public int getNumCardsInWeaponDeck() { return weaponDeck.size(); }
 
     public List<Card> getEnvelopeCards() { return envelopeCards; }
+
+    public List<Card> getSuspectDeck() { return suspectDeck; }
+
+    public List<Card> getRoomDeck() { return roomDeck; }
+
+    public List<Card> getWeaponDeck() { return weaponDeck; }
 }
