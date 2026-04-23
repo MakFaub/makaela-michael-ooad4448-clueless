@@ -28,4 +28,7 @@ public class Hallway extends Space {
         }
         super.connect(direction, neighbor);
     }
+
+    @Override
+    public boolean isHallway() { return true ;}
 }

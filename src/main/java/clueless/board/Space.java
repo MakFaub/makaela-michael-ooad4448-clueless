@@ -1,5 +1,6 @@
 package clueless.board;
 
+import clueless.pieces.IPiece;
 import clueless.pieces.Piece;
 import clueless.pieces.PieceType;
 import clueless.pieces.SuspectPiece;
@@ -80,5 +81,21 @@ public abstract class Space {
 
     public String getName(){
         return name;
+    }
+
+    public boolean isRoom() { return false; }
+
+    public boolean isHallway() { return false; }
+
+    public List<Piece> getWeaponPieces() {
+        return pieces.stream().filter(piece -> piece.getType() == PieceType.Weapon).toList();
+    }
+
+    public List<Piece> getArtifactPieces() {
+        return pieces.stream().filter(piece -> piece.getType().isArtifact()).toList();
+    }
+
+    public boolean hasNeighbors() {
+        return !neighbors.isEmpty();
     }
 }

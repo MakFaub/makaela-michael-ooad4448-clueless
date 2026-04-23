@@ -37,4 +37,7 @@ public class Room extends Space{
                 .filter(Space::isAvailable)
                 .toList();
     }
+
+    @Override
+    public boolean isRoom() { return true; }
 }
