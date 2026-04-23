@@ -17,9 +17,12 @@ import java.util.Set;
 
 public class Player {
     private final String name;
-    private final List<Card> hand = new ArrayList<>();
     private Piece suspectPiece;
     private Space currentSpace;
+
+    private final Set<Card> hand = new HashSet<>();
+    private final Set<Card> discoveredCards = new HashSet<>();
+    private Set<ArtifactPiece> artifacts = new HashSet<>();
 
     public void setPiece(Piece piece) {
         this.suspectPiece = piece;
@@ -32,13 +35,6 @@ public class Player {
     public Space getCurrentSpace() {
         return this.currentSpace;
     }
-
-
-
-    private final List<Card> discoveredCards = new ArrayList<>();
-    private final Set<Card> hand = new HashSet<>();
-    private final Set<Card> discoveredCards = new HashSet<>();
-    private Set<ArtifactPiece> artifacts = new HashSet<>();
 
     public Player(String name){ this.name = name; }
 

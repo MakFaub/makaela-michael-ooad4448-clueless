@@ -58,13 +58,13 @@ class PlayerStrategyTest {
     void testGetCommandTypesIsSorted() {
         PlayerStrategy strategy = strategyWithInput();
 
-        ICommand guess   = new testCommand(CommandType.GUESS);
+        ICommand guess   = new testCommand(CommandType.ACCUSE);
         ICommand suggest = new testCommand(CommandType.SUGGEST);
 
         List<CommandType> types = strategy.getCommandTypes(List.of(guess, suggest));
 
         assertEquals(2, types.size());
-        assertTrue(types.contains(CommandType.GUESS));
+        assertTrue(types.contains(CommandType.ACCUSE));
         assertTrue(types.contains(CommandType.SUGGEST));
         assertEquals(types, types.stream().sorted().toList());
     }
@@ -87,10 +87,10 @@ class PlayerStrategyTest {
     void testGuessIsAlwaysAnOption() {
         PlayerStrategy strategy = strategyWithInput("1", "2");
         ICommand hallwayResult = strategy.selectAction(new testPlayer(), new testHallwaySpace());
-        assertEquals(CommandType.GUESS, hallwayResult.getType());
+        assertEquals(CommandType.ACCUSE, hallwayResult.getType());
 
         ICommand roomResult = strategy.selectAction(new testPlayer(), new testRoomSpace());
-        assertEquals(CommandType.GUESS, roomResult.getType());
+        assertEquals(CommandType.ACCUSE, roomResult.getType());
     }
 
     @Test
