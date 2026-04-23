@@ -10,10 +10,15 @@ public class Room extends Space{
         super(name);
     }
 
+    public Room(String name, boolean startingSpace){
+        super(name, startingSpace);
+    }
+
     public Room getSecretPassage(){return this.secretPassage;}
 
-    public void addSecretPassage(Room secretNeighbor){
+    private void addSecretPassage(Room secretNeighbor){
         this.secretPassage = secretNeighbor;
+        secretNeighbor.secretPassage = this;
         super.connect(Direction.SECRET, secretNeighbor);
     }
 

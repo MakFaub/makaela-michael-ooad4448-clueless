@@ -4,14 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import static clueless.board.Direction.*;
 
 public class Board {
     private final List<Space> spaces;
 
     private Board(List<Space> spaces){
         this.spaces = spaces;
-
-
     }
 
     public List<Space> getSpaces() {
@@ -27,13 +26,41 @@ public class Board {
     public static class Builder {
         private final List<Space> spaces = new ArrayList<>();
         private final Map<String, Space> board = new HashMap<>();
-        private final int gridSize;
 
-        public Builder(int gridSize) {
-            this.gridSize = gridSize;
+        public Builder(){}
+
+        public Builder createBasicBoard() {
+            Room roomA = new Room("Room A");
+            Room roomB = new Room("Room B");
+            Room roomC = new Room("Room C");
+            Room roomD = new Room("Room D");
+
+            Hallway hall_AB = new Hallway("hall AB");
+            Hallway hall_BC = new Hallway("hall BC");
+            Hallway hall_CD = new Hallway("hall CD");
+            Hallway hall_DA = new Hallway("hall DA");
+
+            roomA.connect(EAST, hall_AB);
+            hall_AB.connect(EAST, roomB);
+
+            roomB.connect(SOUTH, hall_BC);
+            hall_BC.connect(SOUTH, roomC);
+
+            roomC.connect(WEST, hall_CD);
+            hall_CD.connect(WEST, roomD);
+
+            roomD.connect(NORTH, hall_DA);
+            hall_DA.connect(NORTH, roomA);
+
+            roomA.connect(SECRET, roomC);
+            roomB.connect(SECRET, roomD);
+
+            addSpace(roomA,roomB,roomC,roomD,hall_AB,hall_BC,hall_CD,hall_DA);
+
+            return this;
         }
 
-        public Builder createDefaultClueBoard() {
+        /* public Builder createDefaultClueBoard() {
             Room kitchen = new Room("Kitchen");
             Room ballroom = new Room("Ballroom");
             Room conservatory = new Room("Conservatory");
@@ -47,9 +74,13 @@ public class Board {
             addSpace(kitchen, ballroom, conservatory, billiard,  library, study, hall, lounge, dining);
 
             return this;
-        }
+        } */
 
         private void addSpace(Space... newSpaces) {
+            addSpaces(List.of(newSpaces));
+        }
+
+        private void addSpaces(List<Space> newSpaces) {
             for (Space space : newSpaces) {
                 spaces.add(space);
                 board.put(space.getName(), space);
@@ -59,8 +90,5 @@ public class Board {
         public Board build() {
             return new Board(spaces);
         }
-
-
-
     }
 }
