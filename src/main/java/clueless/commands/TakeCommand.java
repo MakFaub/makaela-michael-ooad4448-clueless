@@ -26,7 +26,6 @@ public class TakeCommand extends Command {
 
         // player can only have 1 weapon and 1 artifact in hand
         PieceType pieceType = piece.getType();
-        if (player.getPiecesInHand().contains())
 
         space.removePiece(piece);
 

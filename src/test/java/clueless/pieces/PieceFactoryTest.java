@@ -1,6 +1,5 @@
 package clueless.pieces;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -58,7 +57,7 @@ class PieceFactoryTest {
     void testCreateConcealmentArtifactWithName() {
         Piece piece = pieceFactory.createConcealmentArtifact("Cloak of Invisibility");
         assertEquals("Cloak of Invisibility", piece.getName());
-       assertEquals(PieceType.Concealment, piece.getType());
+       assertEquals(PieceType.Conceal, piece.getType());
     }
 
     @Test
@@ -66,7 +65,7 @@ class PieceFactoryTest {
         Piece piece = pieceFactory.createConcealmentArtifact();
         assertNotNull(piece.getName());
         assertTrue(java.util.Arrays.asList(PieceFactory.CONCEALMENT_ARTIFACT_NAMES).contains(piece.getName()));
-        assertTrue(piece.isType(PieceType.Concealment));
+        assertTrue(piece.isType(PieceType.Conceal));
     }
 
     @Test

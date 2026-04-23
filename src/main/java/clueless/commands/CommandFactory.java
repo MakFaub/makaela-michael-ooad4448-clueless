@@ -3,14 +3,13 @@ package clueless.commands;
 import clueless.Player;
 import clueless.board.Space;
 import clueless.pieces.IPiece;
-import clueless.pieces.WeaponPiece;
 
 public class CommandFactory {
     public ICommand newMoveCommand(Player player, Space space, Space newSpace) { return new MoveCommand(player, space, newSpace); }
 
     public ICommand newSuggestCommand(Player player, Space space) { return new SuggestCommand(player, space); }
 
-    public ICommand newGuessCommand(Player player, Space space) { return new GuessCommand(player, space); }
+    public ICommand newAccuseCommand(Player player, Space space) { return new AccuseCommand(player, space); }
 
     public ICommand newLookCommand(Player player, Space space) { return new LookCommand(player, space); }
 

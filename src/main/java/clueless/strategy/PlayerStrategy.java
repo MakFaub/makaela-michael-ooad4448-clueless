@@ -50,7 +50,7 @@ public class PlayerStrategy {
         List<ICommand> availableOptions = new ArrayList<>();
 
         // options available regardless of where player is on board
-        availableOptions.add(commandFactory.newGuessCommand(player, space));
+        availableOptions.add(commandFactory.newAccuseCommand(player, space));
 
         if (space.hasNeighbors()) {
             for (Space neighbor : space.getNeighbors().values()) {

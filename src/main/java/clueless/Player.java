@@ -11,10 +11,11 @@ import java.util.Set;
 
 public class Player {
     private final String name;
+    private SuspectPiece playerPiece;
+
     private final Set<Card> hand = new HashSet<>();
     private final Set<Card> discoveredCards = new HashSet<>();
     private Set<IPiece> piecesInHand = new HashSet<>();
-    private SuspectPiece playerPiece;
 
     // TODO: change constructor to assign playerPiece and remove assignPlayerPiece
     public Player(String name){ this.name = name; }
@@ -51,7 +52,7 @@ public class Player {
     }
 
     public boolean hasConcealmentArtifact() {
-        return hasPieceOfType(PieceType.Concealment);
+        return hasPieceOfType(PieceType.Conceal);
     }
 
     public boolean hasSummonArtifact() {

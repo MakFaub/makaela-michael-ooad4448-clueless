@@ -2,7 +2,7 @@ package clueless.board;
 
 import java.util.List;
 
-public class Room extends Space{
+public class Room extends Space {
 
     private Room secretPassage;
 

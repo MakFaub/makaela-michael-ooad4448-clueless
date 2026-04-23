@@ -1,9 +1,9 @@
 package clueless.pieces;
 
 public enum PieceType {
-    Suspect, Weapon, Concealment, Summon, Transport;
+    Suspect, Weapon, Conceal, Summon, Transport;
 
     public boolean isArtifact() {
-        return this == Concealment || this == Summon || this == Transport;
+        return this == Conceal || this == Summon || this == Transport;
     }
 }

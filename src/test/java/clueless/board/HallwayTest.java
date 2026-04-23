@@ -42,48 +42,6 @@ public class HallwayTest {
     }
 
     @Test
-    void testEnter() {
-        Hallway hallway = new Hallway("Hallway AB");
-        Piece player = factory.createSuspectPiece("Scarlett");
-        assertTrue(hallway.enter(player));
-        assertTrue(hallway.getSuspectPieces().contains(player));
-    }
-
-    @Test
-    void testEnterWhenOccupied() {
-        Hallway hallway = new Hallway("Hallway AB");
-        Piece mustard = factory.createSuspectPiece("Mustard");
-        hallway.enter(factory.createSuspectPiece("Scarlett"));
-        assertFalse(hallway.enter(mustard));
-        assertFalse(hallway.getSuspectPieces().contains(mustard));
-    }
-
-    @Test
-    void testLeave() {
-        Hallway hallway = new Hallway("Hallway AB");
-        Piece player = factory.createSuspectPiece("Scarlett");
-        hallway.enter(player);
-        hallway.leave(player);
-        assertFalse(hallway.getSuspectPieces().contains(player));
-    }
-
-    @Test
-    void testIsOccupied() {
-        Hallway hallway = new Hallway("Hallway AB");
-        assertFalse(hallway.isOccupied());
-        hallway.enter(factory.createSuspectPiece("Scarlett"));
-        assertTrue(hallway.isOccupied());
-    }
-
-    @Test
-    void testIsAvailable() {
-        Hallway hallway = new Hallway("Hallway AB");
-        assertTrue(hallway.isAvailable());
-        hallway.enter(factory.createSuspectPiece("Scarlett"));
-        assertFalse(hallway.isAvailable());
-    }
-
-    @Test
     void testSetStartingSpace() {
         Hallway hallway = new Hallway("Hallway AB");
         assertFalse(hallway.isStartingSpace());

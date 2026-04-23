@@ -13,15 +13,6 @@ public class Hallway extends Space {
     }
 
     @Override
-    public boolean enter(Piece piece) {
-        if(isOccupied()){ return false; }
-        else{
-            super.enter(piece);
-            return true;
-        }
-    }
-
-    @Override
     public void connect(Direction direction, Space neighbor){
         if(direction == Direction.SECRET){
             throw new IllegalArgumentException("Hallways cannot use Direction SECRET.");
