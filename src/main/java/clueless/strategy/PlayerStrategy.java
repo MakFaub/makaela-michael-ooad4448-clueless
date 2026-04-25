@@ -74,9 +74,9 @@ public class PlayerStrategy {
         if (space.isRoom()){
             availableOptions.add(commandFactory.newSuggestCommand(player, space));
 
-            for (IPiece weapons : space.getWeaponPieces()) { availableOptions.add(commandFactory.newTakeCommand(player, space, weapons)); }
+            for (IPiece weapons : space.getWeaponPieces()) { availableOptions.add(commandFactory.newTakeCommand(player, space, weapons, this::getUserInputChoice)); }
 
-            for (IPiece artifacts : space.getArtifactPieces()) { availableOptions.add(commandFactory.newTakeCommand(player, space, artifacts)); }
+            for (IPiece artifacts : space.getArtifactPieces()) { availableOptions.add(commandFactory.newTakeCommand(player, space, artifacts, this::getUserInputChoice)); }
         }
 
         return availableOptions;

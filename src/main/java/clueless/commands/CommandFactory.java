@@ -17,5 +17,5 @@ public class CommandFactory {
 
     public ICommand newTransportCommand(Player player, Space space) {return new TransportCommand(player, space); }
 
-    public ICommand newTakeCommand(Player player, Space space, IPiece piece) { return new TakeCommand(player, space, piece); }
+    public ICommand newTakeCommand(Player player, Space space, IPiece piece, IInputHandler inputHandler) { return new TakeCommand(player, space, piece, inputHandler); }
 }

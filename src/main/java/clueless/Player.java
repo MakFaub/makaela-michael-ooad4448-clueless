@@ -66,4 +66,9 @@ public class Player {
     public IPiece getPieceOfType(PieceType type) {
         return piecesInHand.stream().filter(p -> p.getType() == type).findFirst().orElse(null);
     }
+
+    public void swapPiecesInHand(IPiece oldPiece, IPiece newPiece) {
+        piecesInHand.remove(oldPiece);
+        piecesInHand.add(newPiece);
+    }
 }

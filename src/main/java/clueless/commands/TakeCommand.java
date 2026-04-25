@@ -4,16 +4,17 @@ import clueless.Player;
 import clueless.board.Space;
 import clueless.pieces.IPiece;
 import clueless.pieces.PieceType;
-import clueless.pieces.WeaponPiece;
 
 import java.util.List;
 
 public class TakeCommand extends Command {
     private final IPiece piece;
+    private final IInputHandler inputHandler;
 
-    public TakeCommand(Player player, Space space, IPiece piece){
+    public TakeCommand(Player player, Space space, IPiece piece, IInputHandler inputHandler){
         super(CommandType.TAKE, player, space);
         this.piece = piece;
+        this.inputHandler = inputHandler;
     }
 
     private boolean isValidPieceToTake(PieceType type) {
@@ -24,14 +25,13 @@ public class TakeCommand extends Command {
         PieceType newPieceType = newPiece.getType();
         IPiece existing = player.getPieceOfType(newPieceType);
         System.out.println("You already have a " + newPieceType.name() + ": " + existing.getName());
-        System.out.println("Would you like to trade it for " + piece.getName() + "?");
-        System.out.println("1. Yes\n2. No");
+        System.out.println("Would you like to trade it for " + newPiece.getName() + "?");
 
-        if (getUserInputChoice(List.of("Yes", "No")).equals("Yes")) {
-            player.removePiece(existing);
-            player.addPiece(piece);
-            space.addPiece(existing); // put the old piece back in the room
-            System.out.println("Traded " + existing.getName() + " for " + piece.getName() + ".");
+        if (inputHandler.choose(List.of("Yes", "No")).equals("Yes")) {
+            player.swapPiecesInHand(existing, newPiece);
+            space.removePiece(newPiece);
+            space.addPiece(existing);
+            System.out.println("Traded " + existing.getName() + " for " + newPiece.getName() + ".");
         } else {
             System.out.println("Kept " + existing.getName() + ".");
         }
@@ -54,11 +54,13 @@ public class TakeCommand extends Command {
         }
 
         if (player.hasPieceOfType(pieceType)) {
-
+            optionToSwapPieceInHand(piece);
+            return true;
         }
 
         space.removePiece(piece);
-
+        player.takePiece(piece); // <-- missing
+        System.out.println("Took " + piece.getName() + ".");
         return true;
     }
 
