@@ -1,14 +1,13 @@
 package clueless.strategy;
 
 import clueless.Player;
-import clueless.board.Direction;
-import clueless.board.Space;
+import clueless.board.*;
 import clueless.commands.CommandType;
 import clueless.commands.ICommand;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,44 +20,37 @@ class PlayerStrategyTest {
         @Override public boolean hasTransportArtifact() { return true; }
     }
 
-    static class testHallwaySpace extends Space {
-        testHallwaySpace() { super("Hallway"); }
-
-        @Override public boolean isHallway() { return true; }
-        @Override public boolean hasNeighbors() { return false; }
-        @Override public Map<Direction, Space> getNeighbors() { return Map.of(); }
-    }
-
-    static class testRoomSpace extends Space {
-        testRoomSpace() { super("Kitchen"); }
-
-        @Override public boolean isRoom() { return true; }
-        @Override public boolean hasNeighbors() { return false; }
-        @Override public Map<Direction, Space> getNeighbors() { return Map.of(); }
-    }
-
     static class testCommand implements ICommand {
         private final CommandType type;
 
         testCommand(CommandType type) { this.type = type; }
 
-        @Override public CommandType getType()     { return type; }
-        @Override public boolean execute()            { return false; }
-        @Override public String optionString()     { return type.name(); }
+        @Override public CommandType getType()  { return type; }
+        @Override public boolean execute()      { return false; }
+        @Override public String optionString()  { return type.name(); }
     }
 
+    private Board board;
+    private Space hallway;
+    private Space room;
 
+    @BeforeEach
+    void setUp() {
+        board = new Board.Builder().createBasicBoard().build();
+        hallway = board.getSpace("hall AB");
+        room = board.getSpace("Room A");
+    }
 
     private PlayerStrategy strategyWithInput(String... lines) {
         String input = String.join("\n", lines) + "\n";
-        return new PlayerStrategy(new Scanner(input), List.of());
+        return new PlayerStrategy(new Scanner(input), List.of(), board);
     }
 
     @Test
     void testGetCommandTypesIsSorted() {
         PlayerStrategy strategy = strategyWithInput();
 
-        ICommand accuse   = new testCommand(CommandType.ACCUSE);
+        ICommand accuse  = new testCommand(CommandType.ACCUSE);
         ICommand suggest = new testCommand(CommandType.SUGGEST);
 
         List<CommandType> types = strategy.getCommandTypes(List.of(accuse, suggest));
@@ -73,7 +65,7 @@ class PlayerStrategyTest {
     void testFilterCommandsByType() {
         PlayerStrategy strategy = strategyWithInput();
 
-        ICommand look   = new testCommand(CommandType.LOOK);
+        ICommand look    = new testCommand(CommandType.LOOK);
         ICommand suggest = new testCommand(CommandType.TAKE);
 
         List<ICommand> filtered = strategy.filterCommandsByType(
@@ -85,38 +77,51 @@ class PlayerStrategyTest {
 
     @Test
     void testAccuseIsAlwaysAnOption() {
-        PlayerStrategy strategy = strategyWithInput("1", "2");
-        ICommand hallwayResult = strategy.selectAction(new testPlayer(), new testHallwaySpace());
+        // hallway: MOVE=1, ACCUSE=2, TRANSPORT=3
+        PlayerStrategy hallwayStrategy = strategyWithInput("2");
+        ICommand hallwayResult = hallwayStrategy.selectAction(new testPlayer(), hallway);
         assertEquals(CommandType.ACCUSE, hallwayResult.getType());
 
-        ICommand roomResult = strategy.selectAction(new testPlayer(), new testRoomSpace());
+        // room: MOVE=1, SUGGEST=2, ACCUSE=3, TRANSPORT=4
+        PlayerStrategy roomStrategy = strategyWithInput("3");
+        ICommand roomResult = roomStrategy.selectAction(new testPlayer(), room);
         assertEquals(CommandType.ACCUSE, roomResult.getType());
     }
 
     @Test
     void testSuggestOnlyAvailableInRoom() {
-        PlayerStrategy strategy = strategyWithInput("1", "1");
-
-        ICommand hallwayResult = strategy.selectAction(new testPlayer(), new testHallwaySpace());
+        // hallway: SUGGEST not available, pick ACCUSE=2
+        PlayerStrategy hallwayStrategy = strategyWithInput("2");
+        ICommand hallwayResult = hallwayStrategy.selectAction(new testPlayer(), hallway);
         assertNotEquals(CommandType.SUGGEST, hallwayResult.getType());
 
-        ICommand roomResult = strategy.selectAction(new testPlayer(), new testRoomSpace());
+        // room: MOVE=1, SUGGEST=2, ACCUSE=3, TRANSPORT=4
+        PlayerStrategy roomStrategy = strategyWithInput("2");
+        ICommand roomResult = roomStrategy.selectAction(new testPlayer(), room);
         assertEquals(CommandType.SUGGEST, roomResult.getType());
     }
 
     @Test
     void testTransportOptionIsAvailableIfPlayerHasTransportArtifact() {
-        testPlayer player = new testPlayer();
-
-        PlayerStrategy strategy = strategyWithInput("2"); // Guess=1, Transport=2
-        ICommand result = strategy.selectAction(player, new testHallwaySpace());
+        // TRANSPORT=3, then pick first room=1
+        PlayerStrategy strategy = strategyWithInput("3", "1");
+        ICommand result = strategy.selectAction(new testPlayer(), hallway);
         assertEquals(CommandType.TRANSPORT, result.getType());
     }
 
     @Test
+    void testMoveOptionsAvailableWhenSpaceHasNeighbors() {
+        // MOVE=1, then pick first neighbor=1
+        PlayerStrategy strategy = strategyWithInput("1", "1");
+        ICommand result = strategy.selectAction(new testPlayer(), hallway);
+        assertEquals(CommandType.MOVE, result.getType());
+    }
+
+    @Test
     void testInvalidInput() {
-        PlayerStrategy strategy = strategyWithInput("a", "no", "1");
-        ICommand result = strategy.selectAction(new testPlayer(), new testHallwaySpace());
+        // "a", "no" are invalid, then ACCUSE=2 (single result, no second input needed)
+        PlayerStrategy strategy = strategyWithInput("a", "no", "2");
+        ICommand result = strategy.selectAction(new testPlayer(), hallway);
         assertNotNull(result);
     }
 }

@@ -23,6 +23,10 @@ public class Board {
                 .orElseThrow(() -> new IllegalArgumentException("No space with name: " + name));
     }
 
+    public List<Room> getRooms() {
+        return spaces.stream().filter(space -> space instanceof Room).map(space -> (Room) space).toList();
+    }
+
     public static class Builder {
         private final List<Space> spaces = new ArrayList<>();
         private final Map<String, Space> board = new HashMap<>();

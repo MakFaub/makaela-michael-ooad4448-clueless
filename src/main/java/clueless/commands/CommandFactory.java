@@ -1,6 +1,7 @@
 package clueless.commands;
 
 import clueless.Player;
+import clueless.board.Room;
 import clueless.board.Space;
 import clueless.pieces.IPiece;
 
@@ -17,7 +18,7 @@ public class CommandFactory {
 
     public ICommand newSummonCommand(Player player, Space space) { return new SummonCommand(player, space); }
 
-    public ICommand newTransportCommand(Player player, Space space) {return new TransportCommand(player, space); }
+    public ICommand newTransportCommand(Player player, Space space, Room room) {return new TransportCommand(player, space, room); }
 
     public ICommand newTakeCommand(Player player, Space space, IPiece piece, IInputHandler inputHandler) { return new TakeCommand(player, space, piece, inputHandler); }
 }

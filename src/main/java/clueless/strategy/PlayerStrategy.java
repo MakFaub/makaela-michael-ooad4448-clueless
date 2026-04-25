@@ -1,6 +1,7 @@
 package clueless.strategy;
 
 import clueless.Player;
+import clueless.board.Board;
 import clueless.board.Room;
 import clueless.board.Space;
 import clueless.commands.CommandFactory;
@@ -16,22 +17,25 @@ import java.util.stream.Collectors;
 public class PlayerStrategy {
     static protected CommandFactory commandFactory = new CommandFactory();
     private final List<Player> players;
+    private final Board board;
 
     private final Scanner scanner;
 
-    PlayerStrategy(Scanner scanner, List<Player> players) {
+    PlayerStrategy(Scanner scanner, List<Player> players, Board board) {
         this.scanner = scanner;
         this.players = players;
+        this.board = board;
     }
 
-    public PlayerStrategy(List<Player> players) {
+    public PlayerStrategy(List<Player> players, Board board) {
         this.scanner = new Scanner(System.in);
         this.players = players;
+        this.board = board;
     }
 
     public ICommand selectAction(Player player, Space space) {
         if (space.isHallway()) {
-            System.out.print(player.getName() + ", you are in the hallway.");
+            System.out.print(player.getName() + ", you are in the hallway. \n");
         }
         if (space.isRoom()) {
             System.out.print(player.getName() + ", you are in the " + space.getName() + ". \n");
@@ -62,7 +66,9 @@ public class PlayerStrategy {
         }
 
         if (player.hasTransportArtifact()){
-            availableOptions.add(commandFactory.newTransportCommand(player, space));
+            for (Room room : board.getRooms()){
+                availableOptions.add(commandFactory.newTransportCommand(player, space, room));
+            }
         }
 
         if (player.hasConcealmentArtifact()) {
