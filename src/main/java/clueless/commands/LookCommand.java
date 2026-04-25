@@ -3,6 +3,7 @@ package clueless.commands;
 import clueless.Player;
 import clueless.board.Space;
 import clueless.cards.Card;
+import clueless.pieces.PieceType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +64,8 @@ public class LookCommand extends Command {
         Card revealed = hand.get(new Random().nextInt(hand.size()));
         player.discoverCard(revealed);
         System.out.println("You peeked at " + target.getName() + "'s hand and saw: " + revealed.getName());
+
+        player.removePiece(player.getPieceOfType(PieceType.Conceal));
 
         return true;
     }

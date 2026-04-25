@@ -39,6 +39,8 @@ public class Player {
 
     public void takePiece(IPiece piece) { piecesInHand.add(piece); }
 
+    public void removePiece(IPiece piece) { piecesInHand.remove(piece); }
+
     public Set<IPiece> getPiecesInHand() { return piecesInHand; }
 
     public boolean hasPieceOfType(PieceType type) { return piecesInHand.stream().anyMatch(piece -> piece.getType() == type); }
