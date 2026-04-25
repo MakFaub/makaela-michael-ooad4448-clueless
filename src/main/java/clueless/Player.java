@@ -62,4 +62,8 @@ public class Player {
     public boolean hasWeaponPiece() {
         return hasPieceOfType(PieceType.Weapon);
     }
+
+    public IPiece getPieceOfType(PieceType type) {
+        return piecesInHand.stream().filter(p -> p.getType() == type).findFirst().orElse(null);
+    }
 }
