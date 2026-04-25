@@ -4,6 +4,9 @@ import clueless.Player;
 import clueless.board.Board;
 import clueless.board.Room;
 import clueless.board.Space;
+import clueless.cards.Card;
+import clueless.cards.CardFactory;
+import clueless.cards.Deck;
 import clueless.pieces.SuspectPiece;
 import clueless.pieces.WeaponPiece;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,62 +33,79 @@ class SuggestCommandTest {
         }
     }
 
+    private final CommandFactory commandFactory = new CommandFactory();
+
     private Board board;
-    private Room kitchen;
-    private Room ballroom;
-    private Player player;
-    private SuspectPiece suspectPiece;
+    private Room roomA;
+    private Room roomB;
+    private Player player1;
+    private Player player2;
+    private Player player3;
+    private List<Player> players;
+    private SuspectPiece suspectPiece1;
+    private SuspectPiece suspectPiece2;
     private WeaponPiece weaponInRoom;
+
+    private ICommand suggest(Player player, Space space, List<Player> playerList, IInputHandler input) {
+        return commandFactory.newSuggestCommand(player, space, board, playerList, input);
+    }
 
     @BeforeEach
     void setUp() {
         board = new Board.Builder().createBasicBoard().build();
-        kitchen = (Room) board.getSpace("Room A");
-        ballroom = (Room) board.getSpace("Room B");
+        roomA = (Room) board.getSpace("Room A");
+        roomB = (Room) board.getSpace("Room B");
 
-        SuspectPiece playerPiece = new SuspectPiece("Miss Scarlet");
-        suspectPiece = new SuspectPiece("Colonel Mustard");
+        player1 = new Player("Miss Scarlet");
+        suspectPiece1 = new SuspectPiece("Miss Scarlet");
+        player1.assignPlayerPiece(suspectPiece1);
+
+        player2 = new Player("Colonel Mustard");
+        player3 = new Player("Mrs. Peacock");
+        players = List.of(player1, player2, player3);
+
+        suspectPiece2 = new SuspectPiece("Colonel Mustard");
         weaponInRoom = new WeaponPiece("Candlestick");
 
-        player = new Player("Miss Scarlet");
-        player.assignPlayerPiece(playerPiece);
+        roomA.addPiece(suspectPiece1);
+        roomB.addPiece(suspectPiece2);
+        roomA.addPiece(weaponInRoom);
 
-        kitchen.addPiece(playerPiece);
-        ballroom.addPiece(suspectPiece);
-        kitchen.addPiece(weaponInRoom);
+        Deck deck = new Deck(new CardFactory());
+        deck.shuffle();
+        deck.deal(players);
     }
 
     @Test
     void testFailsWhenPlayerIsInHallway() {
         Space hallway = board.getSpace("hall AB");
-        FakeInputHandler input = new FakeInputHandler();
-
-        SuggestCommand command = new SuggestCommand(player, hallway, board, input);
-
-        assertFalse(command.execute());
+        assertFalse(suggest(player1, hallway, players, new FakeInputHandler()).execute());
     }
 
     @Test
     void testSuspectIsMovedIntoCurrentRoomUponSuggestion() {
-        FakeInputHandler input = new FakeInputHandler(weaponInRoom, suspectPiece);
+        ICommand suggestCommand = suggest(player1, roomA, players, new FakeInputHandler(weaponInRoom, suspectPiece2));
 
-        SuggestCommand command = new SuggestCommand(player, kitchen, board, input);
-
-        assertTrue(command.execute());
-        assertTrue(kitchen.contains(suspectPiece));
-        assertFalse(ballroom.contains(suspectPiece));
+        assertTrue(suggestCommand.execute());
+        assertTrue(roomA.contains(suspectPiece2));
+        assertFalse(roomB.contains(suspectPiece2));
     }
 
     @Test
     void testWeaponChoicesIncludeHeldWeapons() {
         WeaponPiece heldWeapon = new WeaponPiece("Knife");
-        player.takePiece(heldWeapon);
+        player1.takePiece(heldWeapon);
 
-        FakeInputHandler input = new FakeInputHandler(heldWeapon, suspectPiece);
+        assertTrue(suggest(player1, roomA, players, new FakeInputHandler(heldWeapon, suspectPiece2)).execute());
+    }
 
-        SuggestCommand command = new SuggestCommand(player, kitchen, board, input);
+    @Test
+    void testPlayerLearnsCardWhenNextPlayerHasMatchingCard() {
+        Card matchingCard = player2.getHand().stream().findFirst().orElseThrow();
+        WeaponPiece matchingWeapon = new WeaponPiece(matchingCard.getName());
+        roomA.addPiece(matchingWeapon);
 
-        assertTrue(command.execute());
-        assertTrue(kitchen.contains(suspectPiece));
+        assertTrue(suggest(player1, roomA, players, new FakeInputHandler(matchingWeapon, suspectPiece2)).execute());
+        assertTrue(player1.getDiscoveredCards().contains(matchingCard));
     }
 }

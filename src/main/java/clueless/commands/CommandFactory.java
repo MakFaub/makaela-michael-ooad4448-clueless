@@ -6,10 +6,12 @@ import clueless.board.Room;
 import clueless.board.Space;
 import clueless.pieces.IPiece;
 
+import java.util.List;
+
 public class CommandFactory {
     public ICommand newMoveCommand(Player player, Space space, Space newSpace) { return new MoveCommand(player, space, newSpace); }
 
-    public ICommand newSuggestCommand(Player player, Space space, Board board, IInputHandler inputHandler) { return new SuggestCommand(player, space, board, inputHandler); }
+    public ICommand newSuggestCommand(Player player, Space space, Board board, List<Player> players, IInputHandler inputHandler) { return new SuggestCommand(player, space, board, players, inputHandler); }
 
     public ICommand newAccuseCommand(Player player, Space space) { return new AccuseCommand(player, space); }
 
