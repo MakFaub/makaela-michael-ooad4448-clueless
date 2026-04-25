@@ -5,8 +5,6 @@ import clueless.board.Room;
 import clueless.board.Space;
 import clueless.pieces.IPiece;
 
-import java.util.List;
-
 public class CommandFactory {
     public ICommand newMoveCommand(Player player, Space space, Space newSpace) { return new MoveCommand(player, space, newSpace); }
 
@@ -16,7 +14,7 @@ public class CommandFactory {
 
     public ICommand newLookCommand(Player player, Player otherPlayer, Space space) { return new LookCommand(player, otherPlayer, space); }
 
-    public ICommand newSummonCommand(Player player, Space space) { return new SummonCommand(player, space); }
+    public ICommand newSummonCommand(Player player, Space space, IPiece weapon, Room weaponRoom) { return new SummonCommand(player, space, weapon, weaponRoom); }
 
     public ICommand newTransportCommand(Player player, Space space, Room room) {return new TransportCommand(player, space, room); }
 

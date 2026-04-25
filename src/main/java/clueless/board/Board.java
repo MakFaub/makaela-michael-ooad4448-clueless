@@ -1,9 +1,9 @@
 package clueless.board;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import clueless.pieces.IPiece;
+
+import java.util.*;
+
 import static clueless.board.Direction.*;
 
 public class Board {
@@ -25,6 +25,15 @@ public class Board {
 
     public List<Room> getRooms() {
         return spaces.stream().filter(space -> space instanceof Room).map(space -> (Room) space).toList();
+    }
+
+    public List<IPiece> getAllAvailableWeaponPieces() {
+        return getRooms().stream().flatMap(room -> room.getWeaponPieces().stream()).toList();
+    }
+
+    public Room getRoomBasedOnPiece(IPiece piece) {
+        return getRooms().stream().filter(room -> room.contains(piece)).findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("No room contains piece: " + piece.getName()));
     }
 
     public static class Builder {

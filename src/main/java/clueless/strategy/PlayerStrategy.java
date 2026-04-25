@@ -79,8 +79,14 @@ public class PlayerStrategy {
             }
         }
 
+        // can only summon weapons not artifacts
         if (player.hasSummonArtifact()){
-            availableOptions.add(commandFactory.newSummonCommand(player, space));
+            List<IPiece> availableWeapons = board.getAllAvailableWeaponPieces();
+            Room weaponRoom;
+            for (IPiece weapon : availableWeapons) {
+                weaponRoom = board.getRoomBasedOnPiece(weapon);
+                availableOptions.add(commandFactory.newSummonCommand(player, space, weapon, weaponRoom));
+            }
         }
 
         // options only available if player is in room space
