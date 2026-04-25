@@ -51,7 +51,7 @@ class PlayerStrategyTest {
 
     private PlayerStrategy strategyWithInput(String... lines) {
         String input = String.join("\n", lines) + "\n";
-        return new PlayerStrategy(new Scanner(input));
+        return new PlayerStrategy(new Scanner(input), List.of());
     }
 
     @Test

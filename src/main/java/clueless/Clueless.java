@@ -48,6 +48,7 @@ public class Clueless {
         // TODO changes to next player in list (if at the end of the list goes to the start
     }
 
+    // This is already implemented in PlayerStrategy
     public List<ICommand> getPossibleCommands(Player player) {
         List<ICommand> commands = new ArrayList<>();
 

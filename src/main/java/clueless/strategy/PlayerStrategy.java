@@ -15,15 +15,18 @@ import java.util.stream.Collectors;
 
 public class PlayerStrategy {
     static protected CommandFactory commandFactory = new CommandFactory();
+    private final List<Player> players;
 
     private final Scanner scanner;
 
-    PlayerStrategy(Scanner scanner) {
+    PlayerStrategy(Scanner scanner, List<Player> players) {
         this.scanner = scanner;
+        this.players = players;
     }
 
-    public PlayerStrategy() {
+    public PlayerStrategy(List<Player> players) {
         this.scanner = new Scanner(System.in);
+        this.players = players;
     }
 
     public ICommand selectAction(Player player, Space space) {
@@ -63,7 +66,7 @@ public class PlayerStrategy {
         }
 
         if (player.hasConcealmentArtifact()){
-            availableOptions.add(commandFactory.newLookCommand(player, space));
+            availableOptions.add(commandFactory.newLookCommand(player, players, space, this::getUserInputChoice));
         }
 
         if (player.hasSummonArtifact()){
