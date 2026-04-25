@@ -65,8 +65,12 @@ public class PlayerStrategy {
             availableOptions.add(commandFactory.newTransportCommand(player, space));
         }
 
-        if (player.hasConcealmentArtifact()){
-            availableOptions.add(commandFactory.newLookCommand(player, players, space, this::getUserInputChoice));
+        if (player.hasConcealmentArtifact()) {
+            List<Player> otherPlayers = players.stream().filter(p -> !p.equals(player)).toList();
+
+            for (Player otherPlayer : otherPlayers) {
+                availableOptions.add(commandFactory.newLookCommand(player, otherPlayer, space));
+            }
         }
 
         if (player.hasSummonArtifact()){

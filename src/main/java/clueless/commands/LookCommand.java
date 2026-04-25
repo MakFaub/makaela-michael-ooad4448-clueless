@@ -10,34 +10,12 @@ import java.util.List;
 import java.util.Random;
 
 public class LookCommand extends Command {
-    private final List<Player> players;
-    private final IInputHandler inputHandler;
+    private final Player otherPlayer;
 
 
-    public LookCommand(Player myself, List<Player> players, Space space, IInputHandler inputHandler){
+    public LookCommand(Player myself, Player otherPlayer, Space space){
         super(CommandType.LOOK, myself, space);
-        this.players = players;
-        this.inputHandler = inputHandler;
-    }
-
-    private Player getPlayerToPeekAt(){
-        List<Player> otherPlayers = players.stream().filter(p -> !p.equals(player)).toList();
-
-        if (otherPlayers.isEmpty()) {
-            return null;
-        }
-
-        Player target;
-        if (otherPlayers.size() == 1) {
-            target = otherPlayers.getFirst();
-        } else {
-            System.out.println("Which player's hand would you like to peek at?");
-            for (int i = 0; i < otherPlayers.size(); i++) {
-                System.out.println((i + 1) + ". " + otherPlayers.get(i).getName());
-            }
-            target = inputHandler.choose(otherPlayers);
-        }
-        return target;
+        this.otherPlayer = otherPlayer;
     }
 
     // TODO: replace prints with logger
@@ -48,25 +26,23 @@ public class LookCommand extends Command {
             return false;
         }
 
-        Player target = getPlayerToPeekAt();
-
-        if (target == null){
-            System.out.println("There are no other players to peek at.");
-            return false;
-        }
-
-        List<Card> hand = new ArrayList<>(target.getHand());
+        List<Card> hand = new ArrayList<>(otherPlayer.getHand());
         if (hand.isEmpty()) {
-            System.out.println(target.getName() + " has no cards.");
+            System.out.println(otherPlayer.getName() + " has no cards.");
             return false;
         }
 
         Card revealed = hand.get(new Random().nextInt(hand.size()));
         player.discoverCard(revealed);
-        System.out.println("You peeked at " + target.getName() + "'s hand and saw: " + revealed.getName());
+        System.out.println("You peeked at " + otherPlayer.getName() + "'s hand and saw: " + revealed.getName());
 
         player.removePiece(player.getPieceOfType(PieceType.Conceal));
 
         return true;
+    }
+
+    @Override
+    public String optionString() {
+        return otherPlayer.getName();
     }
 }

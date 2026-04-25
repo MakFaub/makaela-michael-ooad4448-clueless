@@ -13,7 +13,7 @@ public class CommandFactory {
 
     public ICommand newAccuseCommand(Player player, Space space) { return new AccuseCommand(player, space); }
 
-    public ICommand newLookCommand(Player player, List<Player> players, Space space, IInputHandler inputHandler) { return new LookCommand(player, players, space, inputHandler); }
+    public ICommand newLookCommand(Player player, Player otherPlayer, Space space) { return new LookCommand(player, otherPlayer, space); }
 
     public ICommand newSummonCommand(Player player, Space space) { return new SummonCommand(player, space); }
 
