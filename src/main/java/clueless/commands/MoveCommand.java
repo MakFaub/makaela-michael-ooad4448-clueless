@@ -33,4 +33,8 @@ public class MoveCommand extends Command {
         return true;
     }
 
+    @Override
+    public String optionString() {
+        return newSpace.getName();
+    }
 }

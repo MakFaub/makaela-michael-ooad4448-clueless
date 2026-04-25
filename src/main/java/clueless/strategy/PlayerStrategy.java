@@ -91,7 +91,7 @@ public class PlayerStrategy {
 
         // options only available if player is in room space
         if (space.isRoom()){
-            availableOptions.add(commandFactory.newSuggestCommand(player, space));
+            availableOptions.add(commandFactory.newSuggestCommand(player, space, board, this::getUserInputChoice));
 
             for (IPiece weapons : space.getWeaponPieces()) { availableOptions.add(commandFactory.newTakeCommand(player, space, weapons, this::getUserInputChoice)); }
 

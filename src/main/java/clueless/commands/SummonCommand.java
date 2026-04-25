@@ -34,4 +34,7 @@ public class SummonCommand extends Command {
 
         return true;
     }
+
+    @Override
+    public String optionString() { return weapon.getName(); }
 }
