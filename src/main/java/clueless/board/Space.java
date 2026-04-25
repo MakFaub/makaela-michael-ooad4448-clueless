@@ -93,4 +93,8 @@ public abstract class Space {
     }
 
     public boolean contains(IPiece piece) { return pieces.contains(piece); }
+
+    public boolean hasNeighbor(Space neighbor) {
+        return neighbors.containsValue(neighbor);
+    }
 }

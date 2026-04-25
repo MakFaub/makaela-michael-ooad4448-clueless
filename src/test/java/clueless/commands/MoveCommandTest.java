@@ -1,4 +1,4 @@
 package clueless.commands;
 
-class TakeCommandTest {
+class MoveCommandTest {
 }
