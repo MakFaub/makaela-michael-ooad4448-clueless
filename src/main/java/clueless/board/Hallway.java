@@ -1,10 +1,13 @@
 package clueless.board;
 
-import clueless.pieces.Piece;
 
 public class Hallway extends Space {
     public Hallway(String name) {
         super(name);
+    }
+
+    public Hallway(String name, boolean isStartingSpace) {
+        super(name, isStartingSpace);
     }
 
     @Override

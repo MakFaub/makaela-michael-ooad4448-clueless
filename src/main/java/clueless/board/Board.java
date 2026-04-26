@@ -1,5 +1,7 @@
 package clueless.board;
 
+import clueless.pieces.IPiece;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +41,15 @@ public class Board {
         return spaces.stream().filter(s -> !s.isStartingSpace()).toList();
     }
 
+    public Room getRoomBasedOnPiece(IPiece piece) {
+        return getRooms().stream().filter(room -> room.contains(piece)).findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("No room contains piece: " + piece.getName()));
+    }
+
+    public List<IPiece> getAllAvailableWeaponPieces() {
+        return getRooms().stream().flatMap(room -> room.getWeaponPieces().stream()).toList();
+    }
+
 
     public static class Builder {
         private final List<Space> spaces = new ArrayList<>();
@@ -57,6 +68,16 @@ public class Board {
             Hallway hall_CD = new Hallway("hall CD");
             Hallway hall_DA = new Hallway("hall DA");
 
+            Hallway starting_1 = new Hallway("starting 1", true);
+            Hallway starting_2 = new Hallway("starting 2", true);
+            Hallway starting_3 = new Hallway("starting 3", true);
+            Hallway starting_4 = new Hallway("starting 4", true);
+
+            starting_1.connect(EAST, hall_DA);
+            starting_2.connect(SOUTH, hall_AB);
+            starting_3.connect(WEST, hall_BC);
+            starting_4.connect(NORTH, hall_CD);
+
             roomA.connect(EAST, hall_AB);
             hall_AB.connect(EAST, roomB);
 
@@ -72,7 +93,7 @@ public class Board {
             roomA.connect(SECRET, roomC);
             roomB.connect(SECRET, roomD);
 
-            addSpace(roomA,roomB,roomC,roomD,hall_AB,hall_BC,hall_CD,hall_DA);
+            addSpace(roomA,roomB,roomC,roomD,hall_AB,hall_BC,hall_CD,hall_DA,starting_1, starting_2,starting_3,starting_4);
 
             return this;
         }

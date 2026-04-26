@@ -11,7 +11,7 @@ public class BoardTest {
     @Test
     void testGetSpaces() {
         Board board = new Board.Builder().createBasicBoard().build();
-        assertEquals(8, board.getSpaces().size());
+        assertEquals(12, board.getSpaces().size());
     }
 
     @Test

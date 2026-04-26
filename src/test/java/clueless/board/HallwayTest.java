@@ -48,4 +48,10 @@ public class HallwayTest {
         hallway.setStartingSpace(true);
         assertTrue(hallway.isStartingSpace());
     }
+
+    @Test
+    void testCreateStartingSpace() {
+        Hallway hallway = new Hallway("hall", true);
+        assertTrue(hallway.isStartingSpace());
+    }
 }
