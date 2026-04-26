@@ -23,8 +23,8 @@ public class MoveCommand extends Command {
             return false;
         }
         if (!space.hasNeighbor(newSpace)) {
-           System.out.println(player.getName() + "tried to move to a space that is not connected to their current location.");
-           return false;
+            System.out.println(player.getName() + "tried to move to a space that is not connected to their current location.");
+            return false;
         }
 
         newSpace.addPiece(playerPiece);
@@ -33,4 +33,8 @@ public class MoveCommand extends Command {
         return true;
     }
 
+    @Override
+    public String optionString() {
+        return newSpace.getName();
+    }
 }
