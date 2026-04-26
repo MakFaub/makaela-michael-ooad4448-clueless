@@ -11,9 +11,13 @@ import clueless.strategy.PlayerStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class Clueless {
-    private Board board;
+    private static final Logger logger = Logger.getLogger(Clueless.class.getName());
+
+
+    private final Board board;
     private final Deck deck;
     private Envelope envelope;
     private final List<Player> players;
@@ -52,7 +56,7 @@ public class Clueless {
             if (result) {
                 envelopeGuessed = true;
             } else {
-                System.out.println(currentPlayer.getName() + " your guess was wrong! You are eliminated.");
+                logger.info(currentPlayer.getName() + " your guess was wrong! You are eliminated.");
                 activePlayers.remove(currentPlayer);
                 if (currentPlayerIndex >= activePlayers.size()) {
                     currentPlayerIndex = 0;
@@ -69,9 +73,9 @@ public class Clueless {
             playTurn();
         }
         if (envelopeGuessed) {
-            System.out.println(getCurrentPlayer().getName() + " wins!");
+            logger.info(getCurrentPlayer().getName() + " wins!");
         } else if (activePlayers.size() == 1) {
-            System.out.println(activePlayers.getFirst().getName() + " wins by default!");
+            logger.info(activePlayers.getFirst().getName() + " wins by default!");
         }
     }
 }

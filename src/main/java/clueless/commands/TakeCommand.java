@@ -6,8 +6,11 @@ import clueless.pieces.IPiece;
 import clueless.pieces.PieceType;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 public class TakeCommand extends Command {
+    private static final Logger logger = Logger.getLogger(TakeCommand.class.getName());
+
     private final IPiece piece;
     private final IInputHandler inputHandler;
 
@@ -31,25 +34,27 @@ public class TakeCommand extends Command {
             player.swapPiecesInHand(existing, newPiece);
             space.removePiece(newPiece);
             space.addPiece(existing);
-            System.out.println("Traded " + existing.getName() + " for " + newPiece.getName() + ".");
+            logger.info(player.getName() + ", you traded " + existing.getName() + " for " + newPiece.getName() + ".");
         } else {
-            System.out.println("Kept " + existing.getName() + ".");
+            logger.info(player.getName() + ", you kept " + existing.getName() + ".");
         }
     }
 
-    // TODO: add logger messages and EventBus
     @Override
     public boolean execute() {
         if (!space.contains(player.getPlayerPiece())) {
+            logger.warning(player.getName() + " is not in " + space.getName());
             return false;
         }
         if (!space.contains(piece)) {
+            logger.warning(piece.getName() + " is not in " + space.getName());
             return false;
         }
 
         // player can only have 1 weapon and 1 artifact in hand
         PieceType pieceType = piece.getType();
         if (!isValidPieceToTake(pieceType)) {
+            logger.warning("Cannot take. Invalid piece: " + piece.getName());
             return false;
         }
 
@@ -59,8 +64,8 @@ public class TakeCommand extends Command {
         }
 
         space.removePiece(piece);
-        player.takePiece(piece); // <-- missing
-        System.out.println("Took " + piece.getName() + ".");
+        player.takePiece(piece);
+        logger.info(player.getName() + ", you took " + piece.getName() + ".");
         return true;
     }
 

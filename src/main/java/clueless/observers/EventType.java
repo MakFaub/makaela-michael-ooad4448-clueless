@@ -1,9 +1,11 @@
 package clueless.observers;
 
 public enum EventType {
-    CHARACTER_MOVED,
+    SUSPECT_MOVED,
     WEAPON_MOVED,
-    ADD_CHARACTER,
+    ADD_PLAYER,
     SUGGESTION_OCCURRED,
-    GUESS_OCCURRED
+    ACCUSATION_OCCURRED,
+    ARTIFACT_USED,
+    TURN_ENDED
 }

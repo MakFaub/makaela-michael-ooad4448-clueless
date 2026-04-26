@@ -12,8 +12,11 @@ import clueless.pieces.SuspectPiece;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Logger;
 
 public class SuggestCommand extends Command {
+    private static final Logger logger = Logger.getLogger(TakeCommand.class.getName());
+
     private final Board board;
     private final List<Player> players;
     private final IInputHandler inputHandler;
@@ -33,7 +36,7 @@ public class SuggestCommand extends Command {
         }
 
         if (weaponOptions.isEmpty()) {
-            System.out.println("There are no weapons available to make a suggestion.");
+            logger.warning("There are no weapons available to make a suggestion.");
             return null;
         }
 
@@ -66,7 +69,7 @@ public class SuggestCommand extends Command {
 
             if (!matchingCards.isEmpty()) {
                 Card revealed = matchingCards.get(new Random().nextInt(matchingCards.size()));
-                System.out.println(otherPlayer.getName() + " revealed a card.");
+                logger.info(otherPlayer.getName() + " revealed a card.");
                 return revealed;
             }
         }
@@ -77,7 +80,7 @@ public class SuggestCommand extends Command {
     @Override
     public boolean execute() {
         if (!space.isRoom()) {
-            System.out.println(player.getName() + " is not in a room and cannot make a suggestion.");
+            logger.warning(player.getName() + " is not in a room and cannot make a suggestion.");
             return false;
         }
 
@@ -92,14 +95,14 @@ public class SuggestCommand extends Command {
         suspectCurrentSpace.removePiece(suspect);
         currentRoom.addPiece(suspect);
 
-        System.out.println(player.getName() + " suggests: " + suspect.getName()
+        logger.info(player.getName() + " suggests: " + suspect.getName()
                 + " in the " + currentRoom.getName()
                 + " with the " + weapon.getName() + ".");
 
         Card learnedCard = checkSuggestionAgainstPlayerHands(suspect, weapon);
 
         if (learnedCard == null) {
-            System.out.println("Other players did not have any cards matching suggestion.");
+            logger.info("Other players did not have any cards matching suggestion.");
         } else {
             player.discoverCard(learnedCard);
         }

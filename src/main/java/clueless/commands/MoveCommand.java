@@ -4,7 +4,12 @@ import clueless.Player;
 import clueless.board.Space;
 import clueless.pieces.IPiece;
 
+import java.util.logging.Logger;
+
 public class MoveCommand extends Command {
+    private static final Logger logger = Logger.getLogger(MoveCommand.class.getName());
+
+
     private final Space newSpace;
     private final IPiece playerPiece;
 
@@ -14,21 +19,20 @@ public class MoveCommand extends Command {
         this.playerPiece = player.getPlayerPiece();
     }
 
-
-    // TODO: implement logger instead of system prints
     @Override
     public boolean execute() {
         if (!space.contains(playerPiece)) {
-            System.out.println(player.getName() + "tried to exit a space they were not in.");
+            logger.warning(player.getName() + "tried to exit a space they were not in.");
             return false;
         }
         if (!space.hasNeighbor(newSpace)) {
-           System.out.println(player.getName() + "tried to move to a space that is not connected to their current location.");
+           logger.warning(player.getName() + "tried to move to a space that is not connected to their current location.");
            return false;
         }
 
         newSpace.addPiece(playerPiece);
         space.removePiece(playerPiece);
+        logger.info(player.getName() + ", you moved from " + space.getName() + " to " + newSpace.getName());
 
         return true;
     }
