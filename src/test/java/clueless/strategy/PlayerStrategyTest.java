@@ -2,6 +2,8 @@ package clueless.strategy;
 
 import clueless.Player;
 import clueless.board.*;
+import clueless.cards.CardFactory;
+import clueless.cards.Envelope;
 import clueless.commands.CommandType;
 import clueless.commands.ICommand;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,7 +45,13 @@ class PlayerStrategyTest {
 
     private PlayerStrategy strategyWithInput(String... lines) {
         String input = String.join("\n", lines) + "\n";
-        return new PlayerStrategy(new Scanner(input), List.of(), board);
+        CardFactory cardFactory = new CardFactory();
+        Envelope envelope = new Envelope(
+                cardFactory.createRoomCard(),
+                cardFactory.createSuspectCard(),
+                cardFactory.createWeaponCard()
+        );
+        return new PlayerStrategy(new Scanner(input), List.of(), board, envelope);
     }
 
     @Test

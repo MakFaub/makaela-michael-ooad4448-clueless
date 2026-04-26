@@ -4,6 +4,7 @@ import clueless.Player;
 import clueless.board.Board;
 import clueless.board.Room;
 import clueless.board.Space;
+import clueless.cards.Envelope;
 import clueless.commands.CommandFactory;
 import clueless.commands.CommandType;
 import clueless.commands.ICommand;
@@ -18,19 +19,22 @@ public class PlayerStrategy {
     static protected CommandFactory commandFactory = new CommandFactory();
     private final List<Player> players;
     private final Board board;
+    private final Envelope envelope;
 
     private final Scanner scanner;
 
-    PlayerStrategy(Scanner scanner, List<Player> players, Board board) {
+    PlayerStrategy(Scanner scanner, List<Player> players, Board board, Envelope envelope) {
         this.scanner = scanner;
         this.players = players;
         this.board = board;
+        this.envelope = envelope;
     }
 
-    public PlayerStrategy(List<Player> players, Board board) {
+    public PlayerStrategy(List<Player> players, Board board, Envelope envelope) {
         this.scanner = new Scanner(System.in);
         this.players = players;
         this.board = board;
+        this.envelope = envelope;
     }
 
     public ICommand selectAction(Player player, Space space) {
@@ -57,7 +61,7 @@ public class PlayerStrategy {
         List<ICommand> availableOptions = new ArrayList<>();
 
         // options available regardless of where player is on board
-        availableOptions.add(commandFactory.newAccuseCommand(player, space));
+        availableOptions.add(commandFactory.newAccuseCommand(player, space, envelope));
 
         if (space.hasNeighbors()) {
             for (Space neighbor : space.getNeighbors().values()) {

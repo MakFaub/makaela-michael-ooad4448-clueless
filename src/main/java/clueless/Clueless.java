@@ -7,81 +7,71 @@ import clueless.cards.Deck;
 import clueless.cards.Envelope;
 import clueless.pieces.Piece;
 import clueless.commands.*;
+import clueless.strategy.PlayerStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Clueless {
     private Board board;
-    private Deck deck;
+    private final Deck deck;
     private Envelope envelope;
-    private List<Player> players;
-    private List<Piece> pieces;
+    private final List<Player> players;
+    private final List<Player> activePlayers;
+    private int currentPlayerIndex = 0;
+    boolean envelopeGuessed = false;
 
+    private final PlayerStrategy playerStrategy;
 
-    public Clueless(Board board, Deck deck, List<Player> players, List<Piece> pieces, Envelope envelope) {
-
+    public Clueless(Board board, Deck deck, List<Player> players) {
+        this.board = board;
+        this.deck = deck;
+        this.players = players;
+        this.activePlayers = new ArrayList<>(players);
+        this.playerStrategy = new PlayerStrategy(players, board, envelope);
     }
 
     private void setup() {
-        board = new Board.Builder().createBasicBoard().build();
         deck.shuffle();
         envelope = deck.fillEnvelope();
         deck.deal(players);
     }
 
-    private void reset() {
-        setup();
-    }
-
-    public boolean isOver() {
-        // TODO if playersLeft == 0 || winner != null
-        return true;
-    }
-
     public Player getCurrentPlayer() {
-        // TODO gets the current player
-        return null;
+        return activePlayers.get(currentPlayerIndex);
     }
 
-    public void nextPlayer() {
-        // TODO changes to next player in list (if at the end of the list goes to the start
+    protected void playTurn() {
+        Player currentPlayer = getCurrentPlayer();
+        Space currentSpace = board.getSpaceBasedOnPiece(currentPlayer.getPlayerPiece());
+
+        ICommand action = playerStrategy.selectAction(currentPlayer, currentSpace);
+        boolean result = action.execute();
+
+        if (action.getType() == CommandType.ACCUSE) {
+            if (result) {
+                envelopeGuessed = true;
+            } else {
+                System.out.println(currentPlayer.getName() + " your guess was wrong! You are eliminated.");
+                activePlayers.remove(currentPlayer);
+                if (currentPlayerIndex >= activePlayers.size()) {
+                    currentPlayerIndex = 0;
+                }
+            }
+        } else {
+            currentPlayerIndex = (currentPlayerIndex + 1) % activePlayers.size();
+        }
     }
 
-    // This is already implemented in PlayerStrategy
-    public List<ICommand> getPossibleCommands(Player player) {
-        List<ICommand> commands = new ArrayList<>();
-
-        // if(canMove(player)) commands.add(new MoveCommand(player,board));
-
-        // if(canCheck(player)) commands.add(new CheckCommand(player,board));
-
-        // if(canSuggest(player)) commands.add(new SuggestCommand(player,board));
-
-        // if(canAccuse(player)) commands.add(new AccuseCommand(player,board));
-
-        // if(canTake(player)) commands.add(new TakeCommand(player,board));
-
-        // if(canSummon(player)) commands.add(new SummonCommand(player,board));
-
-        // if(canTransport(player)) commands.add(new TransportCommand(player,board));
-
-        // if(canConceal(player)) commands.add(new ConcealCommand(player, board));
-
-        return commands;
-    }
-
-    private void play() {
-        while (!isOver()) {
-            Player currentPlayer = getCurrentPlayer();
-
-            //List<Command> possibleCommands = getPossibleCommands(currentPlayer);
-
-            //Command selectedAction = currentPlayer.selectCommand(possibleCommands);
-
-            //selectedAction.execute();
-
-            //nextPlayer();
+    void play() {
+        setup();
+        while (!envelopeGuessed && activePlayers.size() > 1) {
+            playTurn();
+        }
+        if (envelopeGuessed) {
+            System.out.println(getCurrentPlayer().getName() + " wins!");
+        } else if (activePlayers.size() == 1) {
+            System.out.println(activePlayers.getFirst().getName() + " wins by default!");
         }
     }
 }

@@ -79,4 +79,8 @@ public class PieceFactory {
     private static String getRandomConcealmentArtifactName() {
         return CONCEALMENT_ARTIFACT_NAMES[random.nextInt(CONCEALMENT_ARTIFACT_NAMES.length)];
     }
+
+    public String[] getWeaponNames() { return WEAPON_NAMES; }
+
+    public String[] getSuspectNames() { return SUSPECT_NAMES; }
 }

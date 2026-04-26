@@ -1,6 +1,7 @@
 package clueless.board;
 
 import clueless.pieces.IPiece;
+import clueless.pieces.PieceFactory;
 
 import java.util.*;
 
@@ -36,9 +37,15 @@ public class Board {
                 .orElseThrow(() -> new IllegalArgumentException("No room contains piece: " + piece.getName()));
     }
 
+    public Space getSpaceBasedOnPiece(IPiece piece) {
+        return spaces.stream().filter(space -> space.contains(piece)).findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("No space contains piece: " + piece.getName()));
+    }
+
     public static class Builder {
         private final List<Space> spaces = new ArrayList<>();
         private final Map<String, Space> board = new HashMap<>();
+        private static final Random random = new Random();
 
         public Builder(){}
 
@@ -85,6 +92,31 @@ public class Board {
             Room dining = new Room("Dining Room");
 
             addSpace(kitchen, ballroom, conservatory, billiard,  library, study, hall, lounge, dining);
+
+            return this;
+        }
+
+        public Builder placePieces(PieceFactory pieceFactory) {
+            List<Room> rooms = spaces.stream()
+                    .filter(s -> s instanceof Room)
+                    .map(s -> (Room) s)
+                    .toList();
+
+            String[] weaponNames = pieceFactory.getWeaponNames();
+            for (int i = 0; i < weaponNames.length; i++) {
+                Room room = rooms.get(i % rooms.size());
+                room.addPiece(pieceFactory.createWeaponPiece(weaponNames[i]));
+            }
+
+            String[] suspectNames = pieceFactory.getSuspectNames();
+            for (int i = 0; i < suspectNames.length; i++) {
+                Room room = rooms.get(i % rooms.size());
+                room.addPiece(pieceFactory.createSuspectPiece(suspectNames[i]));
+            }
+
+            rooms.get(random.nextInt(rooms.size())).addPiece(pieceFactory.createSummonArtifact());
+            rooms.get(random.nextInt(rooms.size())).addPiece(pieceFactory.createTransportArtifact());
+            rooms.get(random.nextInt(rooms.size())).addPiece(pieceFactory.createConcealmentArtifact());
 
             return this;
         }
