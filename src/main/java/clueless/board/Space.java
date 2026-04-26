@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public abstract class Space {
     private final String name;
     private final Map<Direction, Space> neighbors = new EnumMap<Direction, Space>(Direction.class);
-    private boolean startingSpace;
+    private boolean startingSpace = false;
 
     private final Set<IPiece> pieces = new HashSet<>();
 

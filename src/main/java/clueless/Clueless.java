@@ -1,87 +1,147 @@
 package clueless;
 
-import clueless.board.Board;
-import clueless.board.Direction;
-import clueless.board.Space;
-import clueless.cards.Deck;
-import clueless.cards.Envelope;
-import clueless.pieces.Piece;
+import clueless.board.*;
+import clueless.cards.*;
+import clueless.pieces.*;
 import clueless.commands.*;
+import clueless.die.*;
+import clueless.strategy.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class Clueless {
-    private Board board;
-    private Deck deck;
+    private final Board board;
+    private final Deck deck;
+    private final List<Piece> pieces;
+    private final List<Player> players;
+    private final List<Player> activePlayers;
+    private final IStrategy strategy;
+    private final Die die;
+
     private Envelope envelope;
-    private List<Player> players;
-    private List<Piece> pieces;
+
+    private int currentPlayerNum = 0;
+    private Player winner = null;
 
 
-    public Clueless(Board board, Deck deck, List<Player> players, List<Piece> pieces, Envelope envelope) {
-
+    public Clueless(Board board, Deck deck, List<Player> players, List<Piece> pieces, IStrategy strategy, Die die) {
+        this.board = board;
+        this.deck = deck;
+        this.pieces = pieces;
+        this.players = players;
+        this.activePlayers = new ArrayList<Player>(players);
+        this.die = die;
+        this.strategy = strategy;
     }
 
     private void setup() {
-        board = new Board.Builder().createBasicBoard().build();
         deck.shuffle();
         envelope = deck.fillEnvelope();
         deck.deal(players);
+
+        placePieces();
+    }
+
+    private List<Piece> getPiecesOfType(PieceType type) {
+        return pieces.stream().filter(piece -> piece.isType(type)).collect(Collectors.toList());
+    }
+
+    private List<Piece> getArtifacts() {
+        return pieces.stream().filter(piece -> piece.getType().isArtifact()).collect(Collectors.toList());
+    }
+
+    private void placePieces() {
+
+        List<Space> startingSpaces = board.getStartingSpaces();
+        List<Space> nonStartingSpaces = board.getNonStartingSpaces();
+
+        placeSuspectPieces(getPiecesOfType(PieceType.Suspect), startingSpaces);
+        placeWeaponPieces(getPiecesOfType(PieceType.Weapon), nonStartingSpaces);
+        placeArtifactPieces(getArtifacts(), nonStartingSpaces);
+    }
+
+    private void placeSuspectPieces(List<Piece> suspectPieces, List<Space> startingSpaces) {
+        for (int i = 0; i < suspectPieces.size(); i++) {
+            Space space = startingSpaces.get(i);
+            Piece suspect = suspectPieces.get(i);
+            space.addPiece(suspect);
+
+            for (Player player : players) {
+                if(player.getPlayerPiece() == suspect) player.setCurrentSpace(space);
+            }
+        }
+    }
+
+    private void placeWeaponPieces(List<Piece> weaponPieces, List<Space> nonStartingSpaces) {
+        for (int i = 0; i < weaponPieces.size(); i++) {
+            nonStartingSpaces.get(i).addPiece(weaponPieces.get(i));
+        }
+    }
+
+    private void placeArtifactPieces(List<Piece> artifacts, List<Space> nonStartingSpaces) {
+        for (int i = 0; i < artifacts.size(); i++) {
+            nonStartingSpaces.get(i).addPiece(artifacts.get(i));
+        }
     }
 
     private void reset() {
         setup();
     }
 
-    public boolean isOver() {
-        // TODO if playersLeft == 0 || winner != null
-        return true;
-    }
+    public boolean isOver() { return winner != null || activePlayers.isEmpty(); }
+
 
     public Player getCurrentPlayer() {
-        // TODO gets the current player
-        return null;
+        if(activePlayers.isEmpty()) return null;
+        return activePlayers.get(currentPlayerNum % activePlayers.size());
     }
 
     public void nextPlayer() {
-        // TODO changes to next player in list (if at the end of the list goes to the start
+        if (activePlayers.isEmpty()) return;
+        currentPlayerNum = (currentPlayerNum + 1) % activePlayers.size();
     }
 
-    // This is already implemented in PlayerStrategy
-    public List<ICommand> getPossibleCommands(Player player) {
-        List<ICommand> commands = new ArrayList<>();
+    public void eliminatePlayer(Player player) {
+        int playerNum = activePlayers.indexOf(player);
+        if(playerNum < 0) return;
+        activePlayers.remove(playerNum);
 
-        // if(canMove(player)) commands.add(new MoveCommand(player,board));
-
-        // if(canCheck(player)) commands.add(new CheckCommand(player,board));
-
-        // if(canSuggest(player)) commands.add(new SuggestCommand(player,board));
-
-        // if(canAccuse(player)) commands.add(new AccuseCommand(player,board));
-
-        // if(canTake(player)) commands.add(new TakeCommand(player,board));
-
-        // if(canSummon(player)) commands.add(new SummonCommand(player,board));
-
-        // if(canTransport(player)) commands.add(new TransportCommand(player,board));
-
-        // if(canConceal(player)) commands.add(new ConcealCommand(player, board));
-
-        return commands;
+        if(playerNum < currentPlayerNum) currentPlayerNum--;
+        if(currentPlayerNum >= activePlayers.size() && !activePlayers.contains(player)) {
+            currentPlayerNum = 0;
+        }
     }
 
-    private void play() {
+    public void setWinner(Player player) {this.winner = player;}
+
+    public Envelope getEnvelope() {return envelope;}
+
+    public Board getBoard() {return board;}
+
+    public void play() {
+        setup();
         while (!isOver()) {
             Player currentPlayer = getCurrentPlayer();
+            Space currentSpace = currentPlayer.getCurrentSpace();
 
-            //List<Command> possibleCommands = getPossibleCommands(currentPlayer);
+            ICommand selectedAction = strategy.selectAction(currentPlayer, currentSpace);
+            boolean success = selectedAction.execute();
 
-            //Command selectedAction = currentPlayer.selectCommand(possibleCommands);
-
-            //selectedAction.execute();
-
-            //nextPlayer();
+            if (selectedAction.getType() == CommandType.ACCUSE) {
+                if (success) setWinner(currentPlayer);
+                else eliminatePlayer(currentPlayer);
+            } else {
+                nextPlayer();
+            }
         }
+    }
+
+    public  Player getWinner(){
+        if(winner != null) return winner;
+        else return null;
     }
 }

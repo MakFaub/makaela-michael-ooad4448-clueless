@@ -1,8 +1,9 @@
 package clueless.strategy;
 
+import clueless.Player;
 import clueless.board.Space;
 import clueless.commands.ICommand;
 
 public interface IStrategy {
-    ICommand selectAction(Character myself, Space space);
+    ICommand selectAction(Player myself, Space space);
 }

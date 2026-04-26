@@ -1,10 +1,9 @@
 package clueless;
 
+import clueless.board.Space;
 import clueless.cards.Card;
-import clueless.cards.WeaponCard;
 import clueless.pieces.*;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,6 +11,7 @@ import java.util.Set;
 public class Player {
     private final String name;
     private SuspectPiece playerPiece;
+    private Space currentSpace;
 
     private final Set<Card> hand = new HashSet<>();
     private final Set<Card> discoveredCards = new HashSet<>();
@@ -25,6 +25,10 @@ public class Player {
     public SuspectPiece getPlayerPiece() { return playerPiece; }
 
     public String getName(){ return name; }
+
+    public void setCurrentSpace(Space space){ this.currentSpace = space; }
+
+    public Space getCurrentSpace(){ return currentSpace; }
 
     public void discoverCard(Card card) { discoveredCards.add(card); }
 

@@ -43,6 +43,8 @@ public class Deck {
         remainingCards.addAll(suspectDeck);
         remainingCards.addAll(weaponDeck);
 
+        Collections.shuffle(remainingCards);
+
         for (int i = 0; i < remainingCards.size(); i++) {
             players.get(i % players.size()).addCardsToHand(List.of(remainingCards.get(i)));
         }

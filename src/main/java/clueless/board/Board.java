@@ -27,6 +27,19 @@ public class Board {
         return spaces.stream().filter(space -> space instanceof Room).map(space -> (Room) space).toList();
     }
 
+    public List<Hallway> getHallways() {
+        return spaces.stream().filter(space -> space instanceof Hallway).map(space -> (Hallway) space).toList();
+    }
+
+    public List<Space> getStartingSpaces() {
+        return spaces.stream().filter(Space::isStartingSpace).toList();
+    }
+
+    public List<Space> getNonStartingSpaces() {
+        return spaces.stream().filter(s -> !s.isStartingSpace()).toList();
+    }
+
+
     public static class Builder {
         private final List<Space> spaces = new ArrayList<>();
         private final Map<String, Space> board = new HashMap<>();
