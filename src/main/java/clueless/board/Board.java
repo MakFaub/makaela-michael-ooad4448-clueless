@@ -91,7 +91,87 @@ public class Board {
             Room lounge = new Room("Lounge");
             Room dining = new Room("Dining Room");
 
+            Map<String, Hallway> halls = new HashMap<>();
+            for (int i = 1; i <= 24; i++) {
+                String name = String.valueOf(i);
+                halls.put(name, new Hallway(name));
+            }
+
+            Map<String, Hallway> starts = new HashMap<>();
+            for (int i = 1; i <= 6; i++) {
+                String name = "starting " + i;
+                starts.put(name, new Hallway(name, true));
+            }
+            halls.values().forEach(this::addSpace);
+            starts.values().forEach(this::addSpace);
+
             addSpace(kitchen, ballroom, conservatory, billiard,  library, study, hall, lounge, dining);
+
+            halls.get("1").connect(WEST, starts.get("starting 1"));
+            halls.get("1").connect(NORTH, study);
+            halls.get("1").connect(EAST, halls.get("2"));
+
+            halls.get("2").connect(EAST, halls.get("3"));
+
+            halls.get("3").connect(NORTH, hall);
+            halls.get("3").connect(EAST, halls.get("4"));
+
+            halls.get("4").connect(EAST, halls.get("5"));
+
+            halls.get("5").connect(NORTH, starts.get("starting 2"));
+            halls.get("5").connect(EAST, halls.get("6"));
+
+            halls.get("6").connect(EAST, halls.get("7"));
+
+            halls.get("7").connect(NORTH, lounge);
+            halls.get("7").connect(EAST, starts.get("starting 3"));
+            halls.get("7").connect(SOUTH, halls.get("8"));
+
+            halls.get("8").connect(SOUTH, halls.get("9"));
+
+            halls.get("9").connect(EAST, dining);
+            halls.get("9").connect(SOUTH, halls.get("10"));
+
+            halls.get("10").connect(SOUTH, halls.get("11"));
+
+            halls.get("11").connect(EAST, starts.get("starting 4"));
+            halls.get("11").connect(SOUTH, halls.get("12"));
+
+            halls.get("12").connect(SOUTH, halls.get("13"));
+
+            halls.get("13").connect(EAST, kitchen);
+            halls.get("13").connect(WEST, halls.get("14"));
+
+            halls.get("14").connect(SOUTH, starts.get("starting 5"));
+            halls.get("14").connect(WEST, halls.get("15"));
+
+            halls.get("15").connect(WEST, halls.get("16"));
+
+            halls.get("16").connect(SOUTH, ballroom);
+            halls.get("16").connect(WEST, halls.get("17"));
+
+            halls.get("17").connect(WEST, halls.get("18"));
+
+            halls.get("18").connect(SOUTH, starts.get("starting 6"));
+            halls.get("18").connect(WEST, halls.get("19"));
+
+            halls.get("19").connect(WEST, conservatory);
+            halls.get("19").connect(NORTH, halls.get("20"));
+
+            halls.get("20").connect(NORTH, halls.get("21"));
+
+            halls.get("21").connect(WEST, billiard);
+            halls.get("21").connect(NORTH, halls.get("22"));
+
+            halls.get("22").connect(NORTH, halls.get("23"));
+
+            halls.get("23").connect(WEST, library);
+            halls.get("23").connect(NORTH, halls.get("24"));
+
+            halls.get("24").connect(NORTH, halls.get("1"));
+
+            study.connect(SECRET, kitchen);
+            lounge.connect(SECRET, conservatory);
 
             return this;
         }
