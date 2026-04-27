@@ -3,10 +3,7 @@ package clueless.board;
 import clueless.Player;
 import clueless.pieces.IPiece;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class BoardDisplay {
@@ -25,15 +22,32 @@ public class BoardDisplay {
     private static void addRooms(StringBuilder display, Board board, Map<IPiece, String> playerNames) {
         display.append("ROOMS\n");
         for (Room room : board.getRooms()) {
-            display.append(" ").append(room.getName()).append(" - ").append('\n');
+            display.append(" ")
+                    .append(room.getName())
+                    .append(" - ")
+                    .append(describeSpace(room, playerNames))
+                    .append('\n');
         }
+
+
     }
 
-    private static void addHallways(StringBuilder display, Board board, Map<IPiece, String> playerNames) {
+        private static void addHallways(StringBuilder display, Board board, Map<IPiece, String> playerNames) {
         display.append("HALLWAYS\n");
 
+        List<Hallway> hallways = board.getHallways()
+                .stream()
+                .filter(h -> !h.isStartingSpace())
+                .sorted(Comparator.comparingInt(h -> Integer.parseInt(h.getName())))
+                .toList();
+
+        List<Hallway> starting = board.getStartingHallways()
+                .stream()
+                .sorted(Comparator.comparingInt(h -> Integer.parseInt(h.getName().replace("starting ", ""))))
+                .toList();
+
         int emptyCount = 0;
-        for (Hallway hallway : board.getHallways()) {
+        for (Hallway hallway : hallways) {
             if (spaceIsEmpty(hallway)) emptyCount++;
             else {
                 display.append("  ").append(hallway.getName())
@@ -41,9 +55,20 @@ public class BoardDisplay {
                         .append('\n');
             }
         }
+        for (Hallway hallway : starting) {
+            if (spaceIsEmpty(hallway)) emptyCount++;
+            else {
+                display.append("  ").append(hallway.getName())
+                        .append(" - ").append(describeSpace(hallway, playerNames))
+                        .append('\n');
+            }
+        }
+
         if (emptyCount > 0) display.append("  (").append(emptyCount).append(" empty hallways)\n");
 
     }
+
+
 
     private static boolean spaceIsEmpty(Hallway hallway) {
         return hallway.getPieces().isEmpty();
