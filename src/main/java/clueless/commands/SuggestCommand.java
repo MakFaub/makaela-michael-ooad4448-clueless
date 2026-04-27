@@ -17,7 +17,8 @@ import java.util.Random;
 import java.util.logging.Logger;
 
 public class SuggestCommand extends Command {
-    private static final Logger logger = Logger.getLogger(TakeCommand.class.getName());
+    private static final Logger logger = Logger.getLogger(SuggestCommand.class.getName());
+    private static final Random random = new Random();
 
     private final Board board;
     private final List<Player> players;
@@ -70,7 +71,7 @@ public class SuggestCommand extends Command {
                     .toList();
 
             if (!matchingCards.isEmpty()) {
-                Card revealed = matchingCards.get(new Random().nextInt(matchingCards.size()));
+                Card revealed = matchingCards.get(random.nextInt(matchingCards.size()));
                 logger.info(otherPlayer.getName() + " revealed a card.");
                 return revealed;
             }
@@ -93,7 +94,7 @@ public class SuggestCommand extends Command {
 
         IPiece suspect = chooseSuspect();
 
-        Space suspectCurrentSpace = board.getRoomBasedOnPiece(suspect);
+        Space suspectCurrentSpace = board.getSpaceBasedOnPiece(suspect);
         suspectCurrentSpace.removePiece(suspect);
         currentRoom.addPiece(suspect);
 
