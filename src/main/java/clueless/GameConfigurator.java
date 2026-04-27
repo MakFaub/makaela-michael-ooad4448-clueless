@@ -25,20 +25,24 @@ public class GameConfigurator {
                 .placePieces(pieceFactory);
     }
 
-    public Clueless build() {
+    public ObservableClueless build() {
         Board board = boardBuilder.build();
         Deck deck = new Deck(cardFactory);
 
         List<IPiece> suspects = new ArrayList<>(board.getAllSuspectPieces());
         List<Player> players = new ArrayList<>();
         Scanner scanner = new Scanner(System.in);
+
         for (int i = 0; i < numPlayers; i++) {
             IPiece chosen = promptForSuspect(i + 1, suspects, scanner);
             Player p = new Player("Player " + (i + 1));
             p.assignPlayerPiece((SuspectPiece) chosen);
             players.add(p);
         }
-        return new Clueless(board, deck, players);
+
+        ObservableClueless game = new ObservableClueless(board, deck, players);
+        EventBus.getInstance().attach(game);
+        return game;
     }
 
     private IPiece promptForSuspect(int playerNum, List<IPiece> available, Scanner scanner) {

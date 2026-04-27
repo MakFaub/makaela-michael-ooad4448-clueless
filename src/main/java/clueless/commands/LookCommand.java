@@ -1,8 +1,11 @@
 package clueless.commands;
 
+import clueless.EventBus;
 import clueless.Player;
 import clueless.board.Space;
 import clueless.cards.Card;
+import clueless.observers.EventType;
+import clueless.pieces.IPiece;
 import clueless.pieces.PieceType;
 
 import java.util.ArrayList;
@@ -37,7 +40,9 @@ public class LookCommand extends Command {
         player.discoverCard(revealed);
         logger.info(player.getName() + ", you peeked at " + otherPlayer.getName() + "'s hand and saw: " + revealed.getName());
 
-        player.removePiece(player.getPieceOfType(PieceType.Conceal));
+        IPiece concealArtifact = player.getPieceOfType(PieceType.Conceal);
+        player.removePiece(concealArtifact);
+        EventBus.getInstance().postEvent(EventType.ARTIFACT_USED, concealArtifact.getName());
 
         return true;
     }

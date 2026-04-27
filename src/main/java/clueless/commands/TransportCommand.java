@@ -1,8 +1,10 @@
 package clueless.commands;
 
+import clueless.EventBus;
 import clueless.Player;
 import clueless.board.Room;
 import clueless.board.Space;
+import clueless.observers.EventType;
 import clueless.pieces.IPiece;
 import clueless.pieces.PieceType;
 
@@ -30,6 +32,7 @@ public class TransportCommand extends Command {
 
         IPiece transportArtifact = player.getPieceOfType(PieceType.Transport);
         player.removePiece(transportArtifact);
+        EventBus.getInstance().postEvent(EventType.ARTIFACT_USED, transportArtifact.getName());
 
         logger.info(player.getName() + " used the " + transportArtifact.getName() + " to move from " + space.getName() + " to " + room.getName());
 

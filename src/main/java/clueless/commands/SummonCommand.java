@@ -1,10 +1,13 @@
 package clueless.commands;
 
+import clueless.EventBus;
 import clueless.Player;
 import clueless.board.Room;
 import clueless.board.Space;
+import clueless.observers.EventType;
 import clueless.pieces.IPiece;
 import clueless.pieces.PieceType;
+import clueless.pieces.SummonArtifact;
 
 import java.util.logging.Logger;
 
@@ -38,7 +41,9 @@ public class SummonCommand extends Command {
         weaponRoom.removePiece(weapon);
         logger.info(player.getName() + ", you picked up weapon: " + weapon.getName());
 
-        player.removePiece(player.getPieceOfType(PieceType.Summon));
+        IPiece summonArtifact = player.getPieceOfType(PieceType.Summon);
+        player.removePiece(summonArtifact);
+        EventBus.getInstance().postEvent(EventType.ARTIFACT_USED, summonArtifact.getName());
 
         return true;
     }

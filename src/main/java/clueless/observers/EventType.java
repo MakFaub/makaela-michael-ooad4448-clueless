@@ -7,5 +7,6 @@ public enum EventType {
     SUGGESTION_OCCURRED,
     ACCUSATION_OCCURRED,
     ARTIFACT_USED,
-    TURN_ENDED
+    TURN_ENDED,
+    PLAYER_MOVED
 }

@@ -1,11 +1,13 @@
 package clueless.commands;
 
+import clueless.EventBus;
 import clueless.Player;
 import clueless.board.Board;
 import clueless.board.Room;
 import clueless.board.Space;
 import clueless.cards.Card;
 import clueless.cards.Envelope;
+import clueless.observers.EventType;
 import clueless.pieces.IPiece;
 import clueless.pieces.PieceType;
 
@@ -87,6 +89,8 @@ public class AccuseCommand extends Command {
         } else {
             logger.warning(player.getName() + " made a wrong accusation and is eliminated.");
         }
+
+        EventBus.getInstance().postEvent(EventType.ACCUSATION_OCCURRED, player.getName() + " accused " + suspect.getName());
 
         return guess;
     }

@@ -26,6 +26,7 @@ public class ObservableClueless extends Clueless implements IEventsObserver {
             case ACCUSATION_OCCURRED -> logger.info("Accusation occurred: " + eventObject);
             case ARTIFACT_USED -> logger.info("Artifact used: " + eventObject);
             case TURN_ENDED -> logger.info("Turn ended: " + eventObject);
+            case PLAYER_MOVED ->  logger.info ("Player moved: "+ eventObject);
         }
     }
 
