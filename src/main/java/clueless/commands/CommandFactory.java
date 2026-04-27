@@ -14,7 +14,7 @@ public class CommandFactory {
 
     public ICommand newSuggestCommand(Player player, Space space, Board board, List<Player> players, IInputHandler inputHandler) { return new SuggestCommand(player, space, board, players, inputHandler); }
 
-    public ICommand newAccuseCommand(Player player, Space space, Envelope envelope) { return new AccuseCommand(player, space, envelope); }
+    public ICommand newAccuseCommand(Player player, Space space, Board board, Envelope envelope, List<Player> players, IInputHandler inputHandler) { return new AccuseCommand(player, space, board, envelope, players, inputHandler); }
 
     public ICommand newLookCommand(Player player, Player otherPlayer, Space space) { return new LookCommand(player, otherPlayer, space); }
 
