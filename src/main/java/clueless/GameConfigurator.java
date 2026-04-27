@@ -9,6 +9,7 @@ import clueless.pieces.SuspectPiece;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class GameConfigurator {
     static PieceFactory pieceFactory = new PieceFactory();
@@ -30,7 +31,9 @@ public class GameConfigurator {
 
         List<IPiece> suspects = new ArrayList<>(board.getAllSuspectPieces());
         List<Player> players = new ArrayList<>();
+        Scanner scanner = new Scanner(System.in);
         for (int i = 0; i < numPlayers; i++) {
+            IPiece chosen = promptForSuspect(i + 1, suspects, scanner);
             Player p = new Player("Player " + (i + 1));
             p.assignPlayerPiece((SuspectPiece) suspects.get(i));
             players.add(p);
@@ -38,8 +41,28 @@ public class GameConfigurator {
         return new Clueless(board, deck, players);
     }
 
+    private IPiece promptForSuspect(int playerNum, List<IPiece> available, Scanner scanner) {
+        System.out.println("\nPlayer " + playerNum + ", pick your suspect:");
+        for (int j = 0; j < available.size(); j++) {
+            System.out.println((j + 1) + ". " + available.get(j).getName());
+        }
+
+        while (true) {
+            System.out.print("Enter number: ");
+            try {
+                int choice = Integer.parseInt(scanner.nextLine().trim());
+                if (choice >= 1 && choice <= available.size()) {
+                    return available.remove(choice - 1);
+                }
+            } catch (NumberFormatException ignored) {
+            }
+            System.out.println("Invalid choice.");
+        }
+    }
+
     public static void main(String[] args) {
-        int numPlayers = args.length > 0 ? Integer.parseInt(args[0]) : 4;
+        final int DEFAULT_PLAYER_COUNT = 2;
+        int numPlayers = args.length > 0 ? Integer.parseInt(args[0]) : DEFAULT_PLAYER_COUNT;
         new GameConfigurator(numPlayers).build().play();
     }
 }
