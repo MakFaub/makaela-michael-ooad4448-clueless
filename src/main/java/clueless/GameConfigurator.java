@@ -35,7 +35,7 @@ public class GameConfigurator {
         for (int i = 0; i < numPlayers; i++) {
             IPiece chosen = promptForSuspect(i + 1, suspects, scanner);
             Player p = new Player("Player " + (i + 1));
-            p.assignPlayerPiece((SuspectPiece) suspects.get(i));
+            p.assignPlayerPiece((SuspectPiece) chosen);
             players.add(p);
         }
         return new Clueless(board, deck, players);
