@@ -79,9 +79,9 @@ public class AccuseCommand extends Command {
         Room room = chooseRoom();
 
         boolean guess = envelope.checkGuess(
-                new clueless.cards.RoomCard(room.getName()),
                 new clueless.cards.SuspectCard(suspect.getName()),
-                new clueless.cards.WeaponCard(weapon.getName())
+                new clueless.cards.WeaponCard(weapon.getName()),
+                new clueless.cards.RoomCard(room.getName())
         );
 
         if (guess) {

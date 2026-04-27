@@ -86,5 +86,7 @@ public class Clueless {
         } else if (activePlayers.size() == 1) {
             logger.info(activePlayers.getFirst().getName() + " wins by default!");
         }
+        logger.info("It was " + envelope.suspectCard() + " with the " + envelope.weaponCard() + " in the " +  envelope.roomCard());
+
     }
 }
