@@ -37,6 +37,13 @@ public class Board {
                 .toList();
     }
 
+    public List<Hallway> getHallways() {
+        return spaces.stream()
+                .filter(s -> s instanceof Hallway)
+                .map(s -> (Hallway) s)
+                .toList();
+    }
+
     public List<IPiece> getAllSuspectPieces() {
         return spaces.stream().flatMap(s -> s.getSuspectPieces().stream()).toList();
     }

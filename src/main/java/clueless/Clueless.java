@@ -1,6 +1,7 @@
 package clueless;
 
 import clueless.board.Board;
+import clueless.board.BoardDisplay;
 import clueless.board.Space;
 import clueless.cards.Deck;
 import clueless.cards.Envelope;
@@ -48,9 +49,8 @@ public class Clueless {
         Player currentPlayer = getCurrentPlayer();
         Space currentSpace = board.getSpaceBasedOnPiece(currentPlayer.getPlayerPiece());
 
-        logger.info("==== " + currentPlayer.getName() + "'s turn ====");
-        //System.out.println(BoardDisplay.render(board));
-
+        System.out.println("==== " + currentPlayer.getName() + "'s turn ====");
+        System.out.println(BoardDisplay.render(board, activePlayers));
         ICommand action = playerStrategy.selectAction(currentPlayer, currentSpace);
         boolean result = action.execute();
 
