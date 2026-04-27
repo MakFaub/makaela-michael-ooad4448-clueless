@@ -27,16 +27,16 @@ public class SummonCommand extends Command {
             return false;
         }
 
-        player.takePiece(weapon);
-        weaponRoom.removePiece(weapon);
-        logger.info(player.getName() + ", you picked up weapon: " + weapon.getName());
-
         if (player.hasWeaponPiece()) {
             IPiece oldWeapon = player.getPieceOfType(PieceType.Weapon);
             player.removePiece(oldWeapon);
-            weaponRoom.addPiece(weapon);
+            weaponRoom.addPiece(oldWeapon);
             logger.info(player.getName() + ", you dropped weapon: " + oldWeapon.getName());
         }
+
+        player.takePiece(weapon);
+        weaponRoom.removePiece(weapon);
+        logger.info(player.getName() + ", you picked up weapon: " + weapon.getName());
 
         player.removePiece(player.getPieceOfType(PieceType.Summon));
 
