@@ -55,34 +55,4 @@ public class RoomTest {
         room.setStartingSpace(true);
         assertTrue(room.isStartingSpace());
     }
-
-    @Disabled("Enter not implemented")
-    @Test
-    void testGetPieces() {
-        Room room = new Room("Kitchen");
-        Piece scarlet = factory.createSuspectPiece("Scarlet");
-        Piece candleStick = factory.createWeaponPiece("CandleStick");
-//        room.enter(scarlet);
-//        room.enter(candleStick);
-        assertEquals(2, room.getPieces().size());
-
-        assertTrue(room.getPieces().contains(scarlet));
-        assertTrue(room.getPieces().contains(candleStick));
-    }
-
-    @Disabled("Enter not implemented")
-    @Test
-    void testGetSuspectPieces() {
-        Room room = new Room("Kitchen");
-        Piece scarlet = factory.createSuspectPiece("Scarlet");
-        Piece candleStick = factory.createWeaponPiece("CandleStick");
-//        room.enter(scarlet);
-//        room.enter(candleStick);
-        assertEquals(1, room.getSuspectPieces().size());
-
-        assertTrue(room.getPieces().contains(scarlet));
-        assertTrue(room.getPieces().contains(candleStick));
-    }
-
-
 }

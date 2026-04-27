@@ -1,7 +1,9 @@
 package clueless.commands;
 
+import clueless.EventBus;
 import clueless.Player;
 import clueless.board.Space;
+import clueless.observers.EventType;
 import clueless.pieces.IPiece;
 
 import java.util.logging.Logger;
@@ -33,6 +35,7 @@ public class MoveCommand extends Command {
         newSpace.addPiece(playerPiece);
         space.removePiece(playerPiece);
         logger.info(player.getName() + ", you moved from " + space.getName() + " to " + newSpace.getName());
+        EventBus.getInstance().postEvent(EventType.PLAYER_MOVED, player.getPlayerPiece());
 
         return true;
     }

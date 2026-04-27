@@ -1,5 +1,6 @@
 plugins {
     id("java")
+    id("application")
 }
 
 group = "org.example"
@@ -17,4 +18,12 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+application {
+    mainClass.set("clueless.GameConfigurator")
+}
+
+tasks.run.configure {
+    standardInput = System.`in`
 }

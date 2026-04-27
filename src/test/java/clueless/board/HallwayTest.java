@@ -48,4 +48,26 @@ public class HallwayTest {
         hallway.setStartingSpace(true);
         assertTrue(hallway.isStartingSpace());
     }
+
+    @Test
+    void testIsOccupiedIsFalseWhenEmpty() {
+        Hallway hallway = new Hallway("Hallway AB");
+        assertFalse(hallway.isOccupied());
+    }
+
+    @Test
+    void testIsOccupiedIsTrueWhenSuspectExists() {
+        Hallway hallway = new Hallway("Hallway AB");
+        hallway.addPiece(new SuspectPiece("Miss Scarlet"));
+        assertTrue(hallway.isOccupied());
+    }
+
+    @Test
+    void testHallwayNeighborInGivenDirection() {
+        Hallway hallway1 = new Hallway("1");
+        Hallway hallway2 = new Hallway("2");
+
+        hallway1.connect(Direction.NORTH, hallway2);
+        assertTrue(hallway1.hasNeighbor(hallway2));
+    }
 }

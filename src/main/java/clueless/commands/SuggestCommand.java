@@ -1,10 +1,12 @@
 package clueless.commands;
 
+import clueless.EventBus;
 import clueless.Player;
 import clueless.board.Board;
 import clueless.board.Room;
 import clueless.board.Space;
 import clueless.cards.Card;
+import clueless.observers.EventType;
 import clueless.pieces.IPiece;
 import clueless.pieces.PieceType;
 import clueless.pieces.SuspectPiece;
@@ -106,6 +108,8 @@ public class SuggestCommand extends Command {
         } else {
             player.discoverCard(learnedCard);
         }
+
+        EventBus.getInstance().postEvent(EventType.SUGGESTION_OCCURRED, suspect.getName() + " in " + currentRoom.getName() + " with " + weapon.getName());
 
         return true;
     }

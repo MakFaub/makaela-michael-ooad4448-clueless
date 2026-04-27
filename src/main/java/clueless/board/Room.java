@@ -1,7 +1,5 @@
 package clueless.board;
 
-import java.util.List;
-
 public class Room extends Space {
 
     private Room secretPassage;
@@ -28,12 +26,6 @@ public class Room extends Space {
             if(neighbor instanceof Room){ addSecretPassage((Room) neighbor); }
         }
 
-    }
-
-    public List<Space> getAvailableExits() {
-        return getNeighbors().values().stream()
-                .filter(Space::isAvailable)
-                .toList();
     }
 
     @Override

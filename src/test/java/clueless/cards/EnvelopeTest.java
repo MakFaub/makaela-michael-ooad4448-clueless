@@ -37,4 +37,20 @@ public class EnvelopeTest {
         assertEquals(suspectCard, envelope.suspectCard());
         assertEquals(weaponCard, envelope.weaponCard());
     }
+
+    @Test
+    void testCheckEnvelopeWhenTrue() {
+        roomCard = cardFactory.createRoomCard("Kitchen");
+        suspectCard = cardFactory.createSuspectCard("Miss Scarlet");
+        weaponCard = cardFactory.createWeaponCard("Candlestick");
+        assertTrue(envelope.checkGuess(roomCard, suspectCard, weaponCard));
+    }
+
+    @Test
+    void testCheckEnvelopeWhenFalse() {
+        roomCard = cardFactory.createRoomCard("Library");
+        suspectCard = cardFactory.createSuspectCard("Miss Scarlet");
+        weaponCard = cardFactory.createWeaponCard("Candlestick");
+        assertFalse(envelope.checkGuess(roomCard, suspectCard, weaponCard));
+    }
 }

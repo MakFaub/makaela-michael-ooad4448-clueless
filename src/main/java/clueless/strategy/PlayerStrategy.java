@@ -61,7 +61,9 @@ public class PlayerStrategy {
         List<ICommand> availableOptions = new ArrayList<>();
 
         // options available regardless of where player is on board
-        availableOptions.add(commandFactory.newAccuseCommand(player, space, envelope));
+        availableOptions.add(commandFactory.newShowCardsCommand(player, space));
+
+        availableOptions.add(commandFactory.newAccuseCommand(player, space, board, envelope, players, this::getUserInputChoice));
 
         if (space.hasNeighbors()) {
             for (Space neighbor : space.getNeighbors().values()) {
