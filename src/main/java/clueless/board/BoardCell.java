@@ -8,7 +8,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
+/*
+    Generative AI Assisted Class
+    Claude (Anthropic)
+    Helped Organize a Usable Command Line Board
 
+    This class is used to generate each cell that is displayed on the game board
+ */
 public class BoardCell {
     private static final String WEAPON_INDICATOR   = "*W";
     private static final String ARTIFACT_INDICATOR = "*";
@@ -18,12 +24,14 @@ public class BoardCell {
     private final String name;
     private final List<String> indicators;
 
+    // stores indicators related to a space
     public BoardCell(Space space, Map<IPiece, Integer> playerNumbers) {
         this.name = space.getName();
         this.indicators = buildCellIndicators(space, playerNumbers);
 
     }
 
+    // fetches the types of items in a room to create the respective indicators
     private List<String> buildCellIndicators(Space space, Map<IPiece, Integer> playerNumbers) {
         List<String> itemIndicators = space.getPieces().stream()
                 .filter(piece -> piece.getType() == PieceType.Weapon || piece.getType().isArtifact())
@@ -39,6 +47,8 @@ public class BoardCell {
         return Stream.concat(itemIndicators.stream(), playerIndicators.stream()).toList();
     }
 
+    // converts pieces from displaying their name to displaying a related indicator
+    // see indicators at the top
     private String toIndicator(IPiece piece, Map<IPiece, Integer> playerNumbers) {
         if(piece.isType(PieceType.Weapon)) return WEAPON_INDICATOR;
 
@@ -53,6 +63,7 @@ public class BoardCell {
     public String getName() {
         return name;
     }
+
     public String getIndicatorString() {
         return String.join(" ", indicators);
     }

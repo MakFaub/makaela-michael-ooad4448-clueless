@@ -11,6 +11,31 @@ import static clueless.board.Direction.*;
 public class Board {
     private final List<Space> spaces;
 
+    // Default Clue Rooms
+    public static final String KITCHEN = "Kitchen";
+    public static final String BALLROOM = "Ballroom";
+    public static final String CONSERVATORY = "Conservatory";
+    public static final String BILLIARD_ROOM = "Billiard Room";
+    public static final String LIBRARY = "Library";
+    public static final String STUDY = "Study";
+    public static final String HALL = "Hall";
+    public static final String LOUNGE = "Lounge";
+    public static final String DINING_ROOM = "Dining Room";
+
+    // Default Hall Numbers
+    public static final int DEFAULT_NUM_STARTING_HALLS = 6;
+    public static final int DEFAULT_NUM_HALLS = 24;
+
+    // Test Rooms
+    public static final String ROOM_A = "Room A";
+    public static final String ROOM_B = "Room B";
+    public static final String ROOM_C = "Room C";
+    public static final String ROOM_D = "Room D";
+    public static final String ROOM_E = "Room E";
+    public static final String ROOM_F = "Room F";
+
+    public static final String STARTING_ROOM = "Starting ";
+
     private Board(List<Space> spaces){
         this.spaces = spaces;
     }
@@ -77,10 +102,10 @@ public class Board {
         public Builder(){}
 
         public Builder createBasicTestBoard() {
-            Room roomA = new Room("Room A");
-            Room roomB = new Room("Room B");
-            Room roomC = new Room("Room C");
-            Room roomD = new Room("Room D");
+            Room roomA = new Room(ROOM_A);
+            Room roomB = new Room(ROOM_B);
+            Room roomC = new Room(ROOM_C);
+            Room roomD = new Room(ROOM_D);
 
             Hallway hall_AB = new Hallway("hall AB");
             Hallway hall_BC = new Hallway("hall BC");
@@ -108,12 +133,12 @@ public class Board {
         }
 
         public Builder createDisplayTestBoard() {
-            Room roomA = new Room("Room A");
-            Room roomB = new Room("Room B");
-            Room roomC = new Room("Room C");
-            Room roomD = new Room("Room D");
-            Room roomE = new Room("Room E");
-            Room roomF = new Room("Room F");
+            Room roomA = new Room(ROOM_A);
+            Room roomB = new Room(ROOM_B);
+            Room roomC = new Room(ROOM_C);
+            Room roomD = new Room(ROOM_D);
+            Room roomE = new Room(ROOM_E);
+            Room roomF = new Room(ROOM_F);
 
             Map<String, Hallway> halls = new HashMap<>();
             for (int i = 1; i <= 6; i++) {
@@ -122,8 +147,8 @@ public class Board {
             }
 
             Map<String, Hallway> starts = new HashMap<>();
-            for (int i = 1; i <= 6; i++) {
-                String name = "starting " + i;
+            for (int i = 1; i <= DEFAULT_NUM_STARTING_HALLS; i++) {
+                String name = STARTING_ROOM + i;
                 starts.put(name, new Hallway(name, true));
             }
 
@@ -176,13 +201,13 @@ public class Board {
             Room dining = new Room("Dining Room");
 
             Map<String, Hallway> halls = new HashMap<>();
-            for (int i = 1; i <= 24; i++) {
+            for (int i = 1; i <= DEFAULT_NUM_HALLS; i++) {
                 String name = String.valueOf(i);
                 halls.put(name, new Hallway(name));
             }
 
             Map<String, Hallway> starts = new HashMap<>();
-            for (int i = 1; i <= 6; i++) {
+            for (int i = 1; i <= DEFAULT_NUM_STARTING_HALLS; i++) {
                 String name = "starting " + i;
                 starts.put(name, new Hallway(name, true));
             }

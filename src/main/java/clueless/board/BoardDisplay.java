@@ -8,6 +8,29 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+
+/*
+    Generative AI Assisted Class
+    Claude (Anthropic)
+    Helped Organize a Usable Command Line Board
+
+    This class is used to generate the game board by walking through all connections on the board using BFS
+    This allows us to implement different board types which is configurable in args
+
+    Claude assisted in making the gameboard uniform and assisted with
+    brainstorming ideas for an effective board layout that wasn't overcomplicated.
+
+
+    Prompt: help me design a layout that is easy to read, displays full room names, shows the name of weapons in a room
+    and artifacts in a hallway (the artifacts can be represented as a single character for the type (T:transport, S:summon, etc.)
+
+    Prompt: how do I center the built cells so that the display is consistent?
+
+    Prompt: I want to abstract the building process so that it can be used with any board I choose to display.
+    How can I do this by calling protected Space[][] buildGridFromConnections(Space start, Board board) return toGrid(board.getGridPositions(start));
+    So that it performs a BFS search of all spaces in the Board to learn the layout.
+
+ */
 public abstract class BoardDisplay {
 
     private static final int    CELL_WIDTH      = 14;
@@ -105,10 +128,6 @@ public abstract class BoardDisplay {
         int leftPad = totalPadding / 2;
         int rightPad = totalPadding - leftPad;
         return "[" + " ".repeat(leftPad) + content + " ".repeat(rightPad) + "]";
-    }
-
-    private String blankCell() {
-        return "[" + " ".repeat(CELL_WIDTH) + "]";
     }
 
     private Map<IPiece, Integer> buildPlayerNumbers(List<Player> players) {
