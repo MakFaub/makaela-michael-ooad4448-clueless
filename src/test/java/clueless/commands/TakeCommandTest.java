@@ -42,7 +42,7 @@ class TakeCommandTest {
 
     @BeforeEach
     void setUp() {
-        board = new Board.Builder().createBasicBoard().build();
+        board = new Board.Builder().createBasicTestBoard().build();
         room = (Room) board.getSpace("Room A");
 
         playerPiece = new SuspectPiece("Miss Scarlet");

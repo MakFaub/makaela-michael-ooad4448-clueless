@@ -1,6 +1,5 @@
 package clueless.board;
 
-import clueless.Player;
 import org.junit.jupiter.api.Test;
 
 import static clueless.board.Direction.*;
@@ -10,26 +9,26 @@ public class BoardTest {
 
     @Test
     void testGetSpaces() {
-        Board board = new Board.Builder().createBasicBoard().build();
+        Board board = new Board.Builder().createBasicTestBoard().build();
         assertEquals(8, board.getSpaces().size());
     }
 
     @Test
     void testGetSpaceByName() {
-        Board board = new Board.Builder().createBasicBoard().build();
+        Board board = new Board.Builder().createBasicTestBoard().build();
         Space space = board.getSpace("Room A");
         assertEquals("Room A", space.getName());
     }
 
     @Test
     void testGetSpaceInvalidNameThrows() {
-        Board board = new Board.Builder().createBasicBoard().build();
+        Board board = new Board.Builder().createBasicTestBoard().build();
         assertThrows(IllegalArgumentException.class, () -> board.getSpace("Nonexistent"));
     }
 
     @Test
     void testRoomsConnectedViaHallways() {
-        Board board = new Board.Builder().createBasicBoard().build();
+        Board board = new Board.Builder().createBasicTestBoard().build();
         Space roomA = board.getSpace("Room A");
         Space hallAB = board.getSpace("hall AB");
         assertEquals(hallAB, roomA.getNeighbor(EAST));
@@ -37,7 +36,7 @@ public class BoardTest {
 
     @Test
     void testHallwayConnectedToRooms() {
-        Board board = new Board.Builder().createBasicBoard().build();
+        Board board = new Board.Builder().createBasicTestBoard().build();
         Space hallAB = board.getSpace("hall AB");
         Space roomA = board.getSpace("Room A");
         Space roomB = board.getSpace("Room B");
@@ -47,7 +46,7 @@ public class BoardTest {
 
     @Test
     void testSecretPassage() {
-        Board board = new Board.Builder().createBasicBoard().build();
+        Board board = new Board.Builder().createBasicTestBoard().build();
         Room roomA = (Room) board.getSpace("Room A");
         Room roomC = (Room) board.getSpace("Room C");
         assertEquals(roomC, roomA.getSecretPassage());
@@ -56,7 +55,7 @@ public class BoardTest {
 
     @Test
     void testBoardIsCyclic() {
-        Board board = new Board.Builder().createBasicBoard().build();
+        Board board = new Board.Builder().createBasicTestBoard().build();
         Space roomA = board.getSpace("Room A");
         Space hallAB = board.getSpace("hall AB");
         Space roomB = board.getSpace("Room B");

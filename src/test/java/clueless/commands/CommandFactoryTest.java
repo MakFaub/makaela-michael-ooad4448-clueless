@@ -34,7 +34,7 @@ class CommandFactoryTest {
 
     @BeforeEach
     void setUp() {
-        board = new Board.Builder().createBasicBoard().build();
+        board = new Board.Builder().createBasicTestBoard().build();
         roomA = (Room) board.getSpace("Room A");
         roomB = (Room) board.getSpace("Room B");
         hallway = board.getSpace("hall AB");

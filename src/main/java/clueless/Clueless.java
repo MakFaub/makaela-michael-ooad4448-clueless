@@ -13,7 +13,6 @@ import java.util.logging.Logger;
 public class Clueless {
     private static final Logger logger = Logger.getLogger(Clueless.class.getName());
 
-
     private final Board board;
     private final Deck deck;
     private final List<Player> players;
@@ -27,11 +26,12 @@ public class Clueless {
     private BoardDisplay boardDisplay;
 
 
-    public Clueless(Board board, Deck deck, List<Player> players) {
+    public Clueless(Board board, Deck deck, List<Player> players, BoardDisplay boardDisplay) {
         this.board = board;
         this.deck = deck;
         this.players = players;
         this.activePlayers = new ArrayList<>(players);
+        this.boardDisplay = boardDisplay;
     }
 
     private void setup() {
@@ -39,7 +39,6 @@ public class Clueless {
         envelope = deck.fillEnvelope();
         deck.deal(players);
         playerStrategy = new PlayerStrategy(players,board,envelope);
-        boardDisplay = new DefaultBoardDisplay(board, activePlayers);
     }
 
     public Player getCurrentPlayer() {

@@ -38,7 +38,7 @@ class PlayerStrategyTest {
 
     @BeforeEach
     void setUp() {
-        board = new Board.Builder().createBasicBoard().build();
+        board = new Board.Builder().createBasicTestBoard().build();
         hallway = board.getSpace("hall AB");
         room = board.getSpace("Room A");
     }

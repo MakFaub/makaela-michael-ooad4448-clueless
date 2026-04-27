@@ -1,6 +1,7 @@
 package clueless;
 
 import clueless.board.Board;
+import clueless.board.BoardDisplay;
 import clueless.cards.Deck;
 import clueless.observers.EventType;
 import clueless.observers.IEventsObserver;
@@ -12,8 +13,8 @@ public class ObservableClueless extends Clueless implements IEventsObserver {
     private static final Logger logger = Logger.getLogger(ObservableClueless.class.getName());
 
 
-    public ObservableClueless(Board board, Deck deck, List<Player> players){
-        super(board, deck, players);
+    public ObservableClueless(Board board, Deck deck, List<Player> players, BoardDisplay boardDisplay) {
+        super(board, deck, players, boardDisplay);
     }
 
     @Override

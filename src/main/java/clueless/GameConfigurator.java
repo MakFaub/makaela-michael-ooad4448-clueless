@@ -1,6 +1,6 @@
 package clueless;
 
-import clueless.board.Board;
+import clueless.board.*;
 import clueless.cards.CardFactory;
 import clueless.cards.Deck;
 import clueless.pieces.IPiece;
@@ -15,14 +15,18 @@ public class GameConfigurator {
     static PieceFactory pieceFactory = new PieceFactory();
     static CardFactory cardFactory = new CardFactory();
 
+    private final BoardType boardType;
+
     Board.Builder boardBuilder;
     int numPlayers;
 
-    public GameConfigurator(int numPlayers) {
+    public GameConfigurator(int numPlayers, BoardType boardType) {
         this.numPlayers = numPlayers;
-        this.boardBuilder = new Board.Builder()
-                .createDefaultClueBoard()
-                .placePieces(pieceFactory);
+        this.boardType = boardType;
+        this.boardBuilder = switch (boardType) {
+            case DEFAULT -> new Board.Builder().createDefaultClueBoard().placePieces(pieceFactory);
+            case TEST -> new Board.Builder().createDisplayTestBoard().placePieces(pieceFactory);
+        };
     }
 
     public ObservableClueless build() {
@@ -40,7 +44,12 @@ public class GameConfigurator {
             players.add(p);
         }
 
-        ObservableClueless game = new ObservableClueless(board, deck, players);
+        BoardDisplay boardDisplay = switch (boardType) {
+            case DEFAULT -> new DefaultBoardDisplay(board, players);
+            case TEST -> new TestBoardDisplay(board, players);
+        };
+        System.out.println("Using board type: " + boardType);
+        ObservableClueless game = new ObservableClueless(board, deck, players, boardDisplay);
         EventBus.getInstance().attach(game);
         return game;
     }
@@ -66,7 +75,13 @@ public class GameConfigurator {
 
     public static void main(String[] args) {
         final int DEFAULT_PLAYER_COUNT = 2;
-        int numPlayers = args.length > 0 ? Integer.parseInt(args[0]) : DEFAULT_PLAYER_COUNT;
-        new GameConfigurator(numPlayers).build().play();
+        final BoardType DEFAULT_BOARD_TYPE = BoardType.DEFAULT;
+        int numPlayers = DEFAULT_PLAYER_COUNT;
+        BoardType boardType = DEFAULT_BOARD_TYPE;
+
+        if (args.length > 0) numPlayers = Integer.parseInt(args[0]);
+        if  (args.length > 1) boardType = BoardType.valueOf(args[1].toUpperCase());
+
+        new GameConfigurator(numPlayers, boardType).build().play();
     }
 }

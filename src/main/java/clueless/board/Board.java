@@ -76,7 +76,7 @@ public class Board {
 
         public Builder(){}
 
-        public Builder createBasicBoard() {
+        public Builder createBasicTestBoard() {
             Room roomA = new Room("Room A");
             Room roomB = new Room("Room B");
             Room roomC = new Room("Room C");
@@ -103,6 +103,63 @@ public class Board {
             roomB.connect(SECRET, roomD);
 
             addSpace(roomA,roomB,roomC,roomD,hall_AB,hall_BC,hall_CD,hall_DA);
+
+            return this;
+        }
+
+        public Builder createDisplayTestBoard() {
+            Room roomA = new Room("Room A");
+            Room roomB = new Room("Room B");
+            Room roomC = new Room("Room C");
+            Room roomD = new Room("Room D");
+            Room roomE = new Room("Room E");
+            Room roomF = new Room("Room F");
+
+            Map<String, Hallway> halls = new HashMap<>();
+            for (int i = 1; i <= 6; i++) {
+                String name = String.valueOf(i);
+                halls.put(name, new Hallway(name));
+            }
+
+            Map<String, Hallway> starts = new HashMap<>();
+            for (int i = 1; i <= 6; i++) {
+                String name = "starting " + i;
+                starts.put(name, new Hallway(name, true));
+            }
+
+            halls.values().forEach(this::addSpace);
+            starts.values().forEach(this::addSpace);
+
+            addSpace(roomA, roomB, roomC, roomD,  roomE, roomF);
+
+            roomA.connect(EAST, halls.get("1"));
+            halls.get("1").connect(EAST, roomB);
+
+            roomB.connect(EAST, halls.get("2"));
+            halls.get("2").connect(EAST, roomC);
+
+            roomC.connect(SOUTH, halls.get("3"));
+            halls.get("3").connect(SOUTH, roomD);
+
+            roomD.connect(WEST, halls.get("4"));
+            halls.get("4").connect(WEST, roomE);
+
+            roomE.connect(WEST, halls.get("5"));
+            halls.get("5").connect(WEST, roomF);
+
+            roomF.connect(NORTH, halls.get("6"));
+            halls.get("6").connect(NORTH, roomA);
+
+            halls.get("1").connect(NORTH, starts.get("starting 1"));
+            halls.get("2").connect(NORTH, starts.get("starting 2"));
+
+            halls.get("3").connect(EAST, starts.get("starting 3"));
+
+            halls.get("4").connect(SOUTH, starts.get("starting 4"));
+            halls.get("5").connect(SOUTH, starts.get("starting 5"));
+
+            halls.get("6").connect(WEST, starts.get("starting 6"));
+
 
             return this;
         }

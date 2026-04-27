@@ -40,7 +40,7 @@ class AccuseCommandTest {
 
     @BeforeEach
     void setUp() {
-        board = new Board.Builder().createBasicBoard().build();
+        board = new Board.Builder().createBasicTestBoard().build();
         kitchen = (Room) board.getSpace("Room A");
 
         playerPiece = new SuspectPiece("Miss Scarlet");

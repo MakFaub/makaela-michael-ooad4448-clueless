@@ -40,7 +40,7 @@ class BoardDisplayTest {
 
     @Test
     void testDisplayShowsAllRooms() {
-        String output = BoardDisplay.render(board, List.of());
+        String output = BoardInfoDisplay.render(board, List.of());
         for (Room room : board.getRooms()) {
             assertTrue(output.contains(room.getName()), "Expected room: " + room.getName());
         }
@@ -48,7 +48,7 @@ class BoardDisplayTest {
 
     @Test
     void testWeaponIsShownInRoom() {
-        String output = BoardDisplay.render(board, List.of());
+        String output = BoardInfoDisplay.render(board, List.of());
         assertTrue(board.getRooms().stream()
                 .anyMatch(r -> output.contains(r.getName())));
     }
@@ -59,7 +59,7 @@ class BoardDisplayTest {
         currentSpace.removePiece(piece1);
         kitchen.addPiece(piece1);
 
-        String output = BoardDisplay.render(board, List.of(player1));
+        String output = BoardInfoDisplay.render(board, List.of(player1));
         assertTrue(output.contains("Miss Scarlet (Makaela)"));
     }
 
@@ -72,14 +72,14 @@ class BoardDisplayTest {
         kitchen.addPiece(piece1);
         kitchen.addPiece(piece2);
 
-        String output = BoardDisplay.render(board, List.of(player1, player2));
+        String output = BoardInfoDisplay.render(board, List.of(player1, player2));
         assertTrue(output.contains("Miss Scarlet (Makaela)"));
         assertTrue(output.contains("Colonel Mustard (Michael)"));
     }
 
     @Test
     void testDisplayShowsEmptyHallwayCount() {
-        String output = BoardDisplay.render(board, List.of());
+        String output = BoardInfoDisplay.render(board, List.of());
         assertTrue(output.contains("empty hallways"));
     }
 }

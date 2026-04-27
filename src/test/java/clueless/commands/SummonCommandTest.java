@@ -21,7 +21,7 @@ class SummonCommandTest {
 
     @BeforeEach
     void setUp() {
-        board = new Board.Builder().createBasicBoard().build();
+        board = new Board.Builder().createBasicTestBoard().build();
         kitchen = (Room) board.getSpace("Room A");
         ballroom = (Room) board.getSpace("Room B");
 
