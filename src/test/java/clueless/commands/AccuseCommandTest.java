@@ -57,9 +57,9 @@ class AccuseCommandTest {
         players = List.of(player);
 
         correctEnvelope = new Envelope(
-                new RoomCard("Room A"),
                 new SuspectCard("Colonel Mustard"),
-                new WeaponCard("Candlestick")
+                new WeaponCard("Candlestick"),
+                new RoomCard("Room A")
         );
     }
 

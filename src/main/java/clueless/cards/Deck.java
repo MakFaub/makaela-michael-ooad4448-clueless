@@ -31,7 +31,7 @@ public class Deck {
         if (roomDeck.isEmpty() || suspectDeck.isEmpty() || weaponDeck.isEmpty()) throw new IllegalStateException("decks are empty");
 
         envelopeFilled = true;
-        return new Envelope(roomDeck.removeFirst(), suspectDeck.removeFirst(), weaponDeck.removeFirst());
+        return new Envelope(suspectDeck.removeFirst(), weaponDeck.removeFirst(), roomDeck.removeFirst());
     }
 
     public void deal(List<Player> players) {

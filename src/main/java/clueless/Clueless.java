@@ -78,6 +78,7 @@ public class Clueless {
     public void play() {
         logger.info("Game started with " + activePlayers.size() + " players.");
         setup();
+        logger.fine("It was " + envelope.suspectCard().getName() + " with the " + envelope.weaponCard().getName() + " in the " +  envelope.roomCard().getName());
         while (!envelopeGuessed && activePlayers.size() > 1) {
             playTurn();
         }
@@ -86,7 +87,7 @@ public class Clueless {
         } else if (activePlayers.size() == 1) {
             logger.info(activePlayers.getFirst().getName() + " wins by default!");
         }
-        logger.info("It was " + envelope.suspectCard() + " with the " + envelope.weaponCard() + " in the " +  envelope.roomCard());
+        logger.info("It was " + envelope.suspectCard().getName() + " with the " + envelope.weaponCard().getName() + " in the " +  envelope.roomCard().getName());
 
     }
 }

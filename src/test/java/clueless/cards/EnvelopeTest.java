@@ -20,7 +20,7 @@ public class EnvelopeTest {
         roomCard = cardFactory.createRoomCard("Kitchen");
         suspectCard = cardFactory.createSuspectCard("Miss Scarlet");
         weaponCard = cardFactory.createWeaponCard("Candlestick");
-        envelope = new Envelope(roomCard,suspectCard,weaponCard);
+        envelope = new Envelope(suspectCard,weaponCard,roomCard);
     }
 
     @Test
@@ -43,7 +43,7 @@ public class EnvelopeTest {
         roomCard = cardFactory.createRoomCard("Kitchen");
         suspectCard = cardFactory.createSuspectCard("Miss Scarlet");
         weaponCard = cardFactory.createWeaponCard("Candlestick");
-        assertTrue(envelope.checkGuess(roomCard, suspectCard, weaponCard));
+        assertTrue(envelope.checkGuess(suspectCard, weaponCard, roomCard));
     }
 
     @Test
@@ -51,6 +51,6 @@ public class EnvelopeTest {
         roomCard = cardFactory.createRoomCard("Library");
         suspectCard = cardFactory.createSuspectCard("Miss Scarlet");
         weaponCard = cardFactory.createWeaponCard("Candlestick");
-        assertFalse(envelope.checkGuess(roomCard, suspectCard, weaponCard));
+        assertFalse(envelope.checkGuess(suspectCard, weaponCard,roomCard));
     }
 }

@@ -10,8 +10,11 @@ import clueless.pieces.SuspectPiece;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class GameConfigurator {
+    private static final Logger logger = Logger.getLogger(GameConfigurator.class.getName());
     static PieceFactory pieceFactory = new PieceFactory();
     static CardFactory cardFactory = new CardFactory();
 
@@ -48,7 +51,7 @@ public class GameConfigurator {
             case DEFAULT -> new DefaultBoardDisplay(board, players);
             case TEST -> new TestBoardDisplay(board, players);
         };
-        System.out.println("Using board type: " + boardType);
+        logger.info("Using board type: " + boardType);
         ObservableClueless game = new ObservableClueless(board, deck, players, boardDisplay);
         EventBus.getInstance().attach(game);
         return game;
@@ -78,10 +81,23 @@ public class GameConfigurator {
         final BoardType DEFAULT_BOARD_TYPE = BoardType.DEFAULT;
         int numPlayers = DEFAULT_PLAYER_COUNT;
         BoardType boardType = DEFAULT_BOARD_TYPE;
+        boolean debug = false;
 
-        if (args.length > 0) numPlayers = Integer.parseInt(args[0]);
-        if  (args.length > 1) boardType = BoardType.valueOf(args[1].toUpperCase());
+        for (String arg : args) if(arg.equals("--debug")) debug = true;
+
+        if (args.length > 0 && !args[0].startsWith("--")) numPlayers = Integer.parseInt(args[0]);
+        if  (args.length > 1 && !args[1].startsWith("--")) boardType = BoardType.valueOf(args[1].toUpperCase());
+
+        if (debug) enableDebugLogging();
 
         new GameConfigurator(numPlayers, boardType).build().play();
+    }
+
+    private static void enableDebugLogging() {
+        Logger root = Logger.getLogger("");
+        root.setLevel(Level.FINE);
+        for(var handler: root.getHandlers()) {
+            handler.setLevel(Level.FINE);
+        }
     }
 }
