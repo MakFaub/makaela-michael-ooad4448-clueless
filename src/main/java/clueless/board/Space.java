@@ -1,9 +1,7 @@
 package clueless.board;
 
 import clueless.pieces.IPiece;
-import clueless.pieces.Piece;
 import clueless.pieces.PieceType;
-import clueless.pieces.SuspectPiece;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -55,17 +53,12 @@ public abstract class Space {
         return pieces.stream().filter(piece -> piece.getType() == PieceType.Suspect).collect(Collectors.toSet());
     }
 
-    public boolean isAvailable(){
-        return !isOccupied();
+    public boolean isOccupied() {
+        return !getSuspectPieces().isEmpty();
     }
 
-    public boolean isOccupied(){
-        return pieces.stream().anyMatch(piece -> piece.isType(PieceType.Suspect));
-    }
-
-    public boolean addPiece(IPiece piece) {
+    public void addPiece(IPiece piece) {
         pieces.add(piece);
-        return true;
     }
 
     public void removePiece(IPiece piece) {

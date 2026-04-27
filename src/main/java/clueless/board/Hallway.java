@@ -12,11 +12,6 @@ public class Hallway extends Space {
     }
 
     @Override
-    public boolean isOccupied() {
-        return !getSuspectPieces().isEmpty();
-    }
-
-    @Override
     public void connect(Direction direction, Space neighbor){
         if(direction == Direction.SECRET){
             throw new IllegalArgumentException("Hallways cannot use Direction SECRET.");
