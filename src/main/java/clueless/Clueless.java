@@ -51,8 +51,13 @@ public class Clueless {
 
         System.out.println("==== " + currentPlayer.getName() + "'s turn ====");
         System.out.println(BoardDisplay.render(board, activePlayers));
-        ICommand action = playerStrategy.selectAction(currentPlayer, currentSpace);
-        boolean result = action.execute();
+
+        ICommand action;
+        boolean result;
+        do {
+            action = playerStrategy.selectAction(currentPlayer, currentSpace);
+            result = action.execute();
+        } while (action.getType() == CommandType.SHOW_CARDS);
 
         if (action.getType() == CommandType.ACCUSE) {
             if (result) {
