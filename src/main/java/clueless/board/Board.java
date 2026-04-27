@@ -1,6 +1,7 @@
 package clueless.board;
 
 import clueless.pieces.IPiece;
+import clueless.pieces.Piece;
 import clueless.pieces.PieceFactory;
 
 import java.util.*;
@@ -26,6 +27,25 @@ public class Board {
 
     public List<Room> getRooms() {
         return spaces.stream().filter(space -> space instanceof Room).map(space -> (Room) space).toList();
+    }
+
+    public List<Hallway> getStartingHallways() {
+        return spaces.stream()
+                .filter(s -> s instanceof Hallway)
+                .map(s -> (Hallway) s)
+                .filter(Space::isStartingSpace)
+                .toList();
+    }
+
+    public List<IPiece> getAllSuspectPieces() {
+        return spaces.stream().flatMap(s -> s.getSuspectPieces().stream()).toList();
+    }
+
+    public IPiece findSuspectPieceByName(String name) {
+        return getAllSuspectPieces().stream()
+                .filter(p -> p.getName().equals(name))
+                .findFirst()
+                .orElse(null);
     }
 
     public List<IPiece> getAllAvailableWeaponPieces() {
@@ -182,21 +202,53 @@ public class Board {
                     .map(s -> (Room) s)
                     .toList();
 
-            String[] weaponNames = pieceFactory.getWeaponNames();
-            for (int i = 0; i < weaponNames.length; i++) {
-                Room room = rooms.get(i % rooms.size());
-                room.addPiece(pieceFactory.createWeaponPiece(weaponNames[i]));
-            }
+            List<Hallway> startingSpaces = spaces.stream()
+                    .filter(s -> s instanceof Hallway)
+                    .map(s -> (Hallway) s)
+                    .filter(Space::isStartingSpace)
+                    .toList();
+
+            List<Hallway> hallways = spaces.stream()
+                    .filter(s -> s instanceof Hallway)
+                    .map(s -> (Hallway) s)
+                    .filter(h -> !h.isStartingSpace())
+                    .toList();
 
             String[] suspectNames = pieceFactory.getSuspectNames();
-            for (int i = 0; i < suspectNames.length; i++) {
-                Room room = rooms.get(i % rooms.size());
-                room.addPiece(pieceFactory.createSuspectPiece(suspectNames[i]));
+            if (suspectNames.length > startingSpaces.size()) {
+                throw new IllegalStateException("Not enough starting hallways.");
             }
 
-            rooms.get(random.nextInt(rooms.size())).addPiece(pieceFactory.createSummonArtifact());
-            rooms.get(random.nextInt(rooms.size())).addPiece(pieceFactory.createTransportArtifact());
-            rooms.get(random.nextInt(rooms.size())).addPiece(pieceFactory.createConcealmentArtifact());
+            for (int i = 0; i < suspectNames.length; i++) {
+                startingSpaces.get(i).addPiece(pieceFactory.createSuspectPiece(suspectNames[i]));
+            }
+
+            String[] weaponNames = pieceFactory.getWeaponNames();
+            if (weaponNames.length > rooms.size()) {
+                throw new IllegalStateException("Not enough rooms for weapons.");
+            }
+
+            List<Room> shuffledRooms = new ArrayList<>(rooms);
+            Collections.shuffle(shuffledRooms, random);
+            for (int i = 0; i < weaponNames.length; i++) {
+                shuffledRooms.get(i).addPiece(pieceFactory.createWeaponPiece(weaponNames[i]));
+            }
+
+            List<Hallway> shuffledHalls = new ArrayList<>(hallways);
+            Collections.shuffle(shuffledHalls, random);
+            List<Piece> artifacts = List.of(
+                    pieceFactory.createSummonArtifact(),
+                    pieceFactory.createTransportArtifact(),
+                    pieceFactory.createConcealmentArtifact()
+            );
+
+            if (artifacts.size() > shuffledHalls.size()) {
+                throw new IllegalStateException("Not enough hallways for artifacts.");
+            }
+
+            for (int i = 0; i < artifacts.size(); i++) {
+                shuffledHalls.get(i).addPiece(artifacts.get(i));
+            }
 
             return this;
         }

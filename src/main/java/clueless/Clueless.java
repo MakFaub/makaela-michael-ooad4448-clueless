@@ -1,11 +1,9 @@
 package clueless;
 
 import clueless.board.Board;
-import clueless.board.Direction;
 import clueless.board.Space;
 import clueless.cards.Deck;
 import clueless.cards.Envelope;
-import clueless.pieces.Piece;
 import clueless.commands.*;
 import clueless.strategy.PlayerStrategy;
 
@@ -19,26 +17,27 @@ public class Clueless {
 
     private final Board board;
     private final Deck deck;
-    private Envelope envelope;
     private final List<Player> players;
     private final List<Player> activePlayers;
-    private int currentPlayerIndex = 0;
-    boolean envelopeGuessed = false;
 
-    private final PlayerStrategy playerStrategy;
+    private PlayerStrategy playerStrategy;
+    private Envelope envelope;
+    private int currentPlayerIndex = 0;
+    private boolean envelopeGuessed = false;
+
 
     public Clueless(Board board, Deck deck, List<Player> players) {
         this.board = board;
         this.deck = deck;
         this.players = players;
         this.activePlayers = new ArrayList<>(players);
-        this.playerStrategy = new PlayerStrategy(players, board, envelope);
     }
 
     private void setup() {
         deck.shuffle();
         envelope = deck.fillEnvelope();
         deck.deal(players);
+        playerStrategy = new PlayerStrategy(players,board,envelope);
     }
 
     public Player getCurrentPlayer() {
@@ -49,25 +48,29 @@ public class Clueless {
         Player currentPlayer = getCurrentPlayer();
         Space currentSpace = board.getSpaceBasedOnPiece(currentPlayer.getPlayerPiece());
 
+        logger.info("==== " + currentPlayer.getName() + "'s turn ====");
+        //System.out.println(BoardDisplay.render(board));
+
         ICommand action = playerStrategy.selectAction(currentPlayer, currentSpace);
         boolean result = action.execute();
 
         if (action.getType() == CommandType.ACCUSE) {
             if (result) {
                 envelopeGuessed = true;
+                logger.info(currentPlayer.getName() + " has solved the murder!");
             } else {
                 logger.info(currentPlayer.getName() + " your guess was wrong! You are eliminated.");
                 activePlayers.remove(currentPlayer);
-                if (currentPlayerIndex >= activePlayers.size()) {
-                    currentPlayerIndex = 0;
-                }
+                if (currentPlayerIndex >= activePlayers.size()) currentPlayerIndex = 0;
             }
         } else {
+            logger.info(currentPlayer.getName() + " performed a " + action.getType() + " action.");
             currentPlayerIndex = (currentPlayerIndex + 1) % activePlayers.size();
         }
     }
 
-    void play() {
+    public void play() {
+        logger.info("Game started with " + activePlayers.size() + " players.");
         setup();
         while (!envelopeGuessed && activePlayers.size() > 1) {
             playTurn();
