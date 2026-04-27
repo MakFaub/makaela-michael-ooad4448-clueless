@@ -7,6 +7,10 @@ public class Hallway extends Space {
         super(name);
     }
 
+    public Hallway(String name, boolean startingSpace){
+        super(name, startingSpace);
+    }
+
     @Override
     public boolean isOccupied() {
         return !getSuspectPieces().isEmpty();

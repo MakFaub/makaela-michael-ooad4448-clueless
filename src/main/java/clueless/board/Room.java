@@ -10,9 +10,7 @@ public class Room extends Space {
         super(name);
     }
 
-    public Room(String name, boolean startingSpace){
-        super(name, startingSpace);
-    }
+
 
     public Room getSecretPassage(){return this.secretPassage;}
 
