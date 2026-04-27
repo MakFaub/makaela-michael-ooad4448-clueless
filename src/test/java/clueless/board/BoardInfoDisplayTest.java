@@ -10,7 +10,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class BoardDisplayTest {
+class BoardInfoDisplayTest {
 
     private Board board;
     private Player player1;
