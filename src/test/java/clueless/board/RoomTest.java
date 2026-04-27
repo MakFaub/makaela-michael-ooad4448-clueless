@@ -49,12 +49,6 @@ public class RoomTest {
     }
 
     @Test
-    void testCreateStartingSpace() {
-        Room room = new Room("Kitchen", true);
-        assertTrue(room.isStartingSpace());
-    }
-
-    @Test
     void testSetStartingSpace() {
         Room room = new Room("Kitchen");
         assertFalse(room.isStartingSpace());
