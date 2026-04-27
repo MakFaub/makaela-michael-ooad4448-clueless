@@ -4,6 +4,7 @@ import clueless.Player;
 import clueless.board.Board;
 import clueless.board.Room;
 import clueless.board.Space;
+import clueless.cards.CardList;
 import clueless.cards.Envelope;
 import clueless.commands.CommandFactory;
 import clueless.commands.CommandType;
@@ -16,7 +17,7 @@ import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class PlayerStrategy {
-    static protected CommandFactory commandFactory = new CommandFactory();
+    static protected CommandFactory commandFactory = new CommandFactory(CardList.STANDARD_CARDS);
     private final List<Player> players;
     private final Board board;
     private final Envelope envelope;
@@ -38,10 +39,13 @@ public class PlayerStrategy {
     }
 
     public ICommand selectAction(Player player, Space space) {
-        if (space.isHallway()) {
+        if (space.isStartingSpace()) {
+            System.out.println(player.getName() + " is on a starting space.");
+        }
+        else if (space.isHallway()) {
             System.out.print(player.getName() + ", you are in the hallway. \n");
         }
-        if (space.isRoom()) {
+        else if (space.isRoom()) {
             System.out.print(player.getName() + ", you are in the " + space.getName() + ". \n");
         }
         System.out.print("Choose an action." + "\n\n");
@@ -64,6 +68,8 @@ public class PlayerStrategy {
         availableOptions.add(commandFactory.newShowCardsCommand(player, space));
 
         availableOptions.add(commandFactory.newAccuseCommand(player, space, board, envelope, players, this::getUserInputChoice));
+
+        availableOptions.add(commandFactory.newBoardInfoCommand(player, space, board, players));
 
         if (space.hasNeighbors()) {
             for (Space neighbor : space.getNeighbors().values()) {

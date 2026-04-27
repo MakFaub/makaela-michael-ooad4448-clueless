@@ -6,6 +6,7 @@ import clueless.board.Room;
 import clueless.board.Space;
 import clueless.cards.Card;
 import clueless.cards.CardFactory;
+import clueless.cards.CardList;
 import clueless.cards.Deck;
 import clueless.pieces.SuspectPiece;
 import clueless.pieces.WeaponPiece;
@@ -33,7 +34,7 @@ class SuggestCommandTest {
         }
     }
 
-    private final CommandFactory commandFactory = new CommandFactory();
+    private final CommandFactory commandFactory = new CommandFactory(CardList.STANDARD_CARDS);
 
     private Board board;
     private Room roomA;

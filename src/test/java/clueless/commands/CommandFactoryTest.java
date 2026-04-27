@@ -4,10 +4,7 @@ import clueless.Player;
 import clueless.board.Board;
 import clueless.board.Room;
 import clueless.board.Space;
-import clueless.cards.Envelope;
-import clueless.cards.RoomCard;
-import clueless.cards.SuspectCard;
-import clueless.cards.WeaponCard;
+import clueless.cards.*;
 import clueless.pieces.SuspectPiece;
 import clueless.pieces.WeaponPiece;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CommandFactoryTest {
 
-    private final CommandFactory factory = new CommandFactory();
+    private final CommandFactory factory = new CommandFactory(CardList.STANDARD_CARDS);
 
     private Board board;
     private Room roomA;

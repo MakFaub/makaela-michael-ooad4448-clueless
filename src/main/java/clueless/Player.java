@@ -17,7 +17,6 @@ public class Player {
     private final Set<Card> discoveredCards = new HashSet<>();
     private Set<IPiece> piecesInHand = new HashSet<>();
 
-    // TODO: change constructor to assign playerPiece and remove assignPlayerPiece
     public Player(String name){ this.name = name; }
 
     public void assignPlayerPiece(SuspectPiece piece){ this.playerPiece = piece; }

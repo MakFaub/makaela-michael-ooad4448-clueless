@@ -14,11 +14,10 @@ public class Deck {
     private boolean envelopeFilled = false;
 
     public Deck(CardFactory cardFactory) {
-        for (String name : CardFactory.SUSPECT_NAMES) suspectDeck.add(cardFactory.createSuspectCard(name));
-
-        for (String name : CardFactory.WEAPON_NAMES) weaponDeck.add(cardFactory.createWeaponCard(name));
-
-        for (String name : CardFactory.ROOM_NAMES) roomDeck.add(cardFactory.createRoomCard(name));
+        CardList cards = cardFactory.getCardList();
+        for (String name : cards.suspects()) suspectDeck.add(cardFactory.createSuspectCard(name));
+        for (String name : cards.weapons()) weaponDeck.add(cardFactory.createWeaponCard(name));
+        for (String name : cards.rooms()) roomDeck.add(cardFactory.createRoomCard(name));
     }
 
     public void shuffle() {

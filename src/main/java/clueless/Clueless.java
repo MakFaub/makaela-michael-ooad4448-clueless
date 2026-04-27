@@ -57,7 +57,7 @@ public class Clueless {
         do {
             action = playerStrategy.selectAction(currentPlayer, currentSpace);
             result = action.execute();
-        } while (action.getType() == CommandType.SHOW_CARDS);
+        } while (action.getType() == CommandType.SHOW_CARDS || action.getType() == CommandType.SHOW_BOARD_INFO);
 
         if (action.getType() == CommandType.ACCUSE) {
             if (result) {

@@ -1,58 +1,40 @@
 package clueless.cards;
 
+import clueless.Player;
+import clueless.board.Space;
+
+import java.util.List;
 import java.util.Random;
 
 public class CardFactory {
     private static final Random random = new Random();
 
-    int NUM_ROOMS = 9;
-    int NUM_SUSPECTS = 6;
-    int NUM_WEAPONS = 6;
+    private final CardList cards;
 
-    static final String[] ROOM_NAMES = new String[]{
-            "Billiard Room", "Ballroom", "Kitchen", "Conservatory",
-            "Dining Room", "Hall", "Library", "Lounge", "Study"
-    };
-
-    static final String[] SUSPECT_NAMES = new String[]{
-            "Miss Scarlet", "Colonel Mustard", "Dr. Orchard", "Mr. Green",
-            "Mrs. Peacock", "Professor Plum"
-    };
-
-    static final String[] WEAPON_NAMES = new String[]{
-            "Candlestick", "Rope", "Dagger", "Lead Pipe", "Revolver", "Wrench"};
-
-    public Card createRoomCard(String name) {
-        return new RoomCard(name);
+    public CardFactory() {
+        this(CardList.STANDARD_CARDS);
     }
 
-    public Card createRoomCard() {
-        return createRoomCard(getRandomRoomName());
+    public CardFactory(CardList cards) {
+        this.cards = cards;
     }
 
-    private static String getRandomRoomName() {
-        return ROOM_NAMES[random.nextInt(ROOM_NAMES.length)];
+    public CardList getCardList() {
+        return cards;
     }
 
     public Card createSuspectCard(String name) { return new SuspectCard(name); }
+    public Card createWeaponCard(String name) { return new WeaponCard(name); }
+    public Card createRoomCard(String name) { return new RoomCard(name); }
 
-    public Card createSuspectCard() {
-        return createSuspectCard(getRandomSuspectName());
-    }
 
-    private static String getRandomSuspectName() {
-        return SUSPECT_NAMES[random.nextInt(SUSPECT_NAMES.length)];
-    }
+    public Card createSuspectCard() { return createSuspectCard(getRandomSuspectName(cards.rooms())); }
+    public Card createWeaponCard() { return createWeaponCard(getRandomWeaponName(cards.weapons())); }
+    public Card createRoomCard() { return createRoomCard(getRandomRoomName(cards.rooms())); }
 
-    public Card createWeaponCard(String name) {
-        return new WeaponCard(name);
-    }
 
-    public Card createWeaponCard() {
-        return createWeaponCard(getRandomWeaponName());
-    }
+    private static String getRandomSuspectName(List<String> cards) { return cards.get(random.nextInt(cards.size())); }
+    private static String getRandomWeaponName(List<String> cards) { return cards.get(random.nextInt(cards.size())); }
+    private static String getRandomRoomName(List<String> cards) { return cards.get(random.nextInt(cards.size())); }
 
-    private static String getRandomWeaponName() {
-        return WEAPON_NAMES[random.nextInt(WEAPON_NAMES.length)];
-    }
 }
