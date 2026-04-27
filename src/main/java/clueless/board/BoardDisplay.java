@@ -3,100 +3,139 @@ package clueless.board;
 import clueless.Player;
 import clueless.pieces.IPiece;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-public class BoardDisplay {
-    private BoardDisplay() {}
+public abstract class BoardDisplay {
 
-    public static String render(Board board, List<Player> players) {
-        Map<IPiece, String> playerNames = mapPlayerNames(players);
+    private static final int    CELL_WIDTH      = 14;
+    private static final String CONNECTOR       = " - ";
+    private static final String NEWLINE         = "\n";
 
+    private Map<IPiece, Integer> playerNumbers;
+
+    protected BoardDisplay(List<Player> players) {
+        this.playerNumbers = buildPlayerNumbers(players);
+    }
+
+    public void updatePlayers(List<Player> players) {
+        this.playerNumbers = buildPlayerNumbers(players);
+    }
+
+    protected abstract Space[][] buildGrid();
+
+    public String render() {
+        Space[][] grid = buildGrid();
+        boolean[][] connectors = buildVerticalConnectors(grid);
         StringBuilder display = new StringBuilder();
-        addRooms(display, board, playerNames);
-        display.append("\n");
-        addHallways(display, board, playerNames);
+
+        for (int row = 0; row < grid.length; row++) {
+            appendSpaceRow(display, grid[row]);
+            appendVerticalRow(display, connectors[row]);
+        }
+
         return display.toString();
     }
 
-    private static void addRooms(StringBuilder display, Board board, Map<IPiece, String> playerNames) {
-        display.append("ROOMS\n");
-        for (Room room : board.getRooms()) {
-            display.append(" ")
-                    .append(room.getName())
-                    .append(" - ")
-                    .append(describeSpace(room, playerNames))
-                    .append('\n');
-        }
+    private boolean[][] buildVerticalConnectors(Space[][] grid) {
+        boolean[][] connectors = new boolean[grid.length][grid[0].length];
 
-
-    }
-
-        private static void addHallways(StringBuilder display, Board board, Map<IPiece, String> playerNames) {
-        display.append("HALLWAYS\n");
-
-        List<Hallway> hallways = board.getHallways()
-                .stream()
-                .filter(h -> !h.isStartingSpace())
-                .sorted(Comparator.comparingInt(h -> Integer.parseInt(h.getName())))
-                .toList();
-
-        List<Hallway> starting = board.getStartingHallways()
-                .stream()
-                .sorted(Comparator.comparingInt(h -> Integer.parseInt(h.getName().replace("starting ", ""))))
-                .toList();
-
-        int emptyCount = 0;
-        for (Hallway hallway : hallways) {
-            if (spaceIsEmpty(hallway)) emptyCount++;
-            else {
-                display.append("  ").append(hallway.getName())
-                        .append(" - ").append(describeSpace(hallway, playerNames))
-                        .append('\n');
-            }
-        }
-        for (Hallway hallway : starting) {
-            if (spaceIsEmpty(hallway)) emptyCount++;
-            else {
-                display.append("  ").append(hallway.getName())
-                        .append(" - ").append(describeSpace(hallway, playerNames))
-                        .append('\n');
+        for (int row = 0; row < grid.length - 1; row++) {
+            for (int col = 0; col < grid[row].length; col++) {
+                Space current = grid[row][col];
+                Space below   = grid[row + 1][col];
+                connectors[row][col] = current != null && below != null
+                        && (current.getNeighbor(Direction.SOUTH) == below
+                        ||  current.getNeighbor(Direction.NORTH) == below);
             }
         }
 
-        if (emptyCount > 0) display.append("  (").append(emptyCount).append(" empty hallways)\n");
-
+        return connectors;
     }
 
+    private void appendSpaceRow(StringBuilder display, Space[] row) {
+        StringBuilder nameLine      = new StringBuilder();
+        StringBuilder indicatorLine = new StringBuilder();
 
+        for (int col = 0; col < row.length; col++) {
+            Space space = row[col];
+            Space prev  = col > 0 ? row[col - 1] : null;
+            boolean connected = prev != null && space != null;
 
-    private static boolean spaceIsEmpty(Hallway hallway) {
-        return hallway.getPieces().isEmpty();
+            nameLine.append(connected ? CONNECTOR : "   ");
+            indicatorLine.append("   ");
+
+            if (space == null) {
+                nameLine.append(" ".repeat(CELL_WIDTH + 2));
+                indicatorLine.append(" ".repeat(CELL_WIDTH + 2));
+            } else {
+                BoardCell cell = new BoardCell(space, playerNumbers);
+                nameLine.append(formatCell(cell.getName()));
+                indicatorLine.append(formatCell(cell.getIndicatorString()));
+            }
+        }
+
+        display.append(nameLine).append(NEWLINE);
+        display.append(indicatorLine).append(NEWLINE);
     }
 
-    private static String describeSpace(Space space, Map<IPiece, String> playerNames) {
-        List<String> parts = space.getPieces().stream()
-                .map(piece -> {
-                    if (piece.getType().isArtifact()) {
-                        return piece.getType().name() + " Artifact";
-                    }
-                    String playerName = playerNames.get(piece);
-                    if (playerName != null) {
-                        return piece.getName() + " (" + playerName + ")";
-                    } else {
-                        return piece.getName();
-                    }
-                })
-                .collect(Collectors.toList());
+    private void appendVerticalRow(StringBuilder display, boolean[] connectors) {
+        int cellTotal = CELL_WIDTH + 2;
+        int leftPad   = cellTotal / 2;
+        int rightPad  = cellTotal - leftPad - 1;
 
-        return parts.isEmpty() ? "empty" : String.join(", ", parts);
+        for (boolean connector : connectors) {
+            display.append("   ");
+            if (connector) {
+                display.append(" ".repeat(leftPad)).append("|").append(" ".repeat(rightPad));
+            } else {
+                display.append(" ".repeat(cellTotal));
+            }
+        }
+        display.append(NEWLINE);
     }
 
-    private static Map<IPiece, String> mapPlayerNames(List<Player> players) {
-        return players.stream()
-                .filter(player -> player.getPlayerPiece() != null)
-                .collect(Collectors.toMap(Player::getPlayerPiece, Player::getName));
+    private String formatCell(String content) {
+        if (content.length() > CELL_WIDTH) {
+            content = content.substring(0, CELL_WIDTH - 1) + " ";
+        }
+        int totalPadding = CELL_WIDTH - content.length();
+        int leftPad = totalPadding / 2;
+        int rightPad = totalPadding - leftPad;
+        return "[" + " ".repeat(leftPad) + content + " ".repeat(rightPad) + "]";
     }
 
+    private String blankCell() {
+        return "[" + " ".repeat(CELL_WIDTH) + "]";
+    }
 
+    private Map<IPiece, Integer> buildPlayerNumbers(List<Player> players) {
+        return IntStream.range(0, players.size())
+                .filter(i -> players.get(i).getPlayerPiece() != null)
+                .boxed()
+                .collect(Collectors.toMap(
+                        i -> players.get(i).getPlayerPiece(),
+                        i -> i + 1
+                ));
+    }
+
+    private Space[][] toGrid(Map<Space, int[]> positions) {
+        int minRow = positions.values().stream().mapToInt(p -> p[0]).min().orElse(0);
+        int minCol = positions.values().stream().mapToInt(p -> p[1]).min().orElse(0);
+        int maxRow = positions.values().stream().mapToInt(p -> p[0]).max().orElse(0);
+        int maxCol = positions.values().stream().mapToInt(p -> p[1]).max().orElse(0);
+
+        Space[][] grid = new Space[maxRow - minRow + 1][maxCol - minCol + 1];
+        for (Map.Entry<Space, int[]> entry : positions.entrySet()) {
+            grid[entry.getValue()[0] - minRow][entry.getValue()[1] - minCol] = entry.getKey();
+        }
+
+        return grid;
+    }
+
+    protected Space[][] buildGridFromConnections(Space start, Board board) {
+        return toGrid(board.getGridPositions(start));
+    }
 }

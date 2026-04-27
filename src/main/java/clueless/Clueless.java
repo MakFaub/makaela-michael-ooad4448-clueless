@@ -1,8 +1,6 @@
 package clueless;
 
-import clueless.board.Board;
-import clueless.board.BoardDisplay;
-import clueless.board.Space;
+import clueless.board.*;
 import clueless.cards.Deck;
 import clueless.cards.Envelope;
 import clueless.commands.*;
@@ -26,6 +24,8 @@ public class Clueless {
     private int currentPlayerIndex = 0;
     private boolean envelopeGuessed = false;
 
+    private BoardDisplay boardDisplay;
+
 
     public Clueless(Board board, Deck deck, List<Player> players) {
         this.board = board;
@@ -39,6 +39,7 @@ public class Clueless {
         envelope = deck.fillEnvelope();
         deck.deal(players);
         playerStrategy = new PlayerStrategy(players,board,envelope);
+        boardDisplay = new DefaultBoardDisplay(board, activePlayers);
     }
 
     public Player getCurrentPlayer() {
@@ -50,7 +51,8 @@ public class Clueless {
         Space currentSpace = board.getSpaceBasedOnPiece(currentPlayer.getPlayerPiece());
 
         System.out.println("==== " + currentPlayer.getName() + "'s turn ====");
-        System.out.println(BoardDisplay.render(board, activePlayers));
+        //System.out.println(BoardInfoDisplay.render(board, activePlayers));
+        System.out.println(boardDisplay.render());
         ICommand action = playerStrategy.selectAction(currentPlayer, currentSpace);
         boolean result = action.execute();
 
@@ -61,6 +63,7 @@ public class Clueless {
             } else {
                 logger.info(currentPlayer.getName() + " your guess was wrong! You are eliminated.");
                 activePlayers.remove(currentPlayer);
+                boardDisplay.updatePlayers(activePlayers);
                 if (currentPlayerIndex >= activePlayers.size()) currentPlayerIndex = 0;
             }
         } else {

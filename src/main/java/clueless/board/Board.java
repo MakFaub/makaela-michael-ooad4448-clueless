@@ -275,4 +275,37 @@ public class Board {
             return new Board(spaces);
         }
     }
+
+    public Map<Space, int[]> getGridPositions(Space start) {
+        Map<Space, int[]> positions = new LinkedHashMap<>();
+        Queue<Space> queue = new LinkedList<>();
+
+        positions.put(start, new int[]{0, 0});
+        queue.add(start);
+
+        while (!queue.isEmpty()) {
+            Space current = queue.poll();
+            int[] pos = positions.get(current);
+
+            for (Map.Entry<Direction, Space> entry : current.getNeighbors().entrySet()) {
+                Direction dir = entry.getKey();
+                Space neighbor = entry.getValue();
+
+                if (dir == Direction.SECRET || positions.containsKey(neighbor)) continue;
+
+                int[] nextPos = switch (dir) {
+                    case NORTH -> new int[]{pos[0] - 1, pos[1]};
+                    case SOUTH -> new int[]{pos[0] + 1, pos[1]};
+                    case EAST  -> new int[]{pos[0], pos[1] + 1};
+                    case WEST  -> new int[]{pos[0], pos[1] - 1};
+                    default    -> null;
+                };
+
+                positions.put(neighbor, nextPos);
+                queue.add(neighbor);
+            }
+        }
+
+        return positions;
+    }
 }
