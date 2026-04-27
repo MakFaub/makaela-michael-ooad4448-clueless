@@ -34,9 +34,9 @@ public class TakeCommand extends Command {
             player.swapPiecesInHand(existing, newPiece);
             space.removePiece(newPiece);
             space.addPiece(existing);
-            logger.info(player.getName() + ", you traded " + existing.getName() + " for " + newPiece.getName() + ".");
+            logger.info(player.getName() + " traded " + existing.getName() + " for " + newPiece.getName() + ".");
         } else {
-            logger.info(player.getName() + ", you kept " + existing.getName() + ".");
+            logger.info(player.getName() + " kept " + existing.getName() + ".");
         }
     }
 

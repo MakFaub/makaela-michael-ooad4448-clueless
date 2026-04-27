@@ -95,13 +95,13 @@ public class PlayerStrategy {
             }
         }
 
+        for (IPiece weapons : space.getWeaponPieces()) { availableOptions.add(commandFactory.newTakeCommand(player, space, weapons, this::getUserInputChoice)); }
+
+        for (IPiece artifacts : space.getArtifactPieces()) { availableOptions.add(commandFactory.newTakeCommand(player, space, artifacts, this::getUserInputChoice)); }
+
         // options only available if player is in room space
         if (space.isRoom()){
             availableOptions.add(commandFactory.newSuggestCommand(player, space, board, players, this::getUserInputChoice));
-
-            for (IPiece weapons : space.getWeaponPieces()) { availableOptions.add(commandFactory.newTakeCommand(player, space, weapons, this::getUserInputChoice)); }
-
-            for (IPiece artifacts : space.getArtifactPieces()) { availableOptions.add(commandFactory.newTakeCommand(player, space, artifacts, this::getUserInputChoice)); }
         }
 
         return availableOptions;
